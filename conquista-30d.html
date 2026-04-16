@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONQUISTA — Sistema Operativo</title>
+<style>
+:root{
+  --w:#FFFFFF;--bg:#F7F7F5;--bg2:#EFEFED;--bd:#E8E8E4;--bd2:#D4D4CE;
+  --bk:#111111;--bk2:#333333;--gr:#777777;--gr2:#AAAAAA;
+  --gn:#00C853;--gnbg:#E8FAF0;--gndk:#007A33;
+  --rd:#FF3B30;--rdbg:#FFF0EE;
+  --am:#FF9500;--ambg:#FFF8EE;
+  --bl:#0066FF;--blbg:#EEF3FF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--bk);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.app{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sb{width:230px;flex-shrink:0;background:var(--w);border-right:1px solid var(--bd);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sb-logo{padding:16px;border-bottom:1px solid var(--bd)}
+.logo-r{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.logo-ic{width:34px;height:34px;background:var(--bk);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--w);font-size:15px;font-weight:800;flex-shrink:0}
+.logo-n{font-size:14px;font-weight:800;letter-spacing:-.3px}
+.logo-s{font-size:11px;color:var(--gr)}
+.gm{background:var(--bg);border-radius:8px;padding:9px 11px}
+.gm-top{font-size:11px;color:var(--gr);display:flex;justify-content:space-between;margin-bottom:4px}
+.gm-bar{height:4px;background:var(--bd);border-radius:2px;overflow:hidden}
+.gm-fill{height:100%;background:var(--gn);border-radius:2px;transition:width .5s}
+.gm-amt{font-size:13px;font-weight:700;color:var(--gndk);margin-top:4px}
+.nav{flex:1;padding:8px;overflow-y:auto}
+.ns{font-size:10px;font-weight:600;color:var(--gr2);padding:9px 8px 4px;letter-spacing:.06em;text-transform:uppercase}
+.ni{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--gr);font-size:13px;transition:all .12s;margin-bottom:1px;font-weight:500;border:1px solid transparent}
+.ni:hover{background:var(--bg);color:var(--bk)}
+.ni.on{background:var(--bk);color:var(--w)}
+.ni-ic{font-size:14px;width:16px;text-align:center;flex-shrink:0}
+.sb-ft{padding:12px 14px;border-top:1px solid var(--bd)}
+.sb-date{font-size:11px;color:var(--gr)}
+.sb-day{font-size:13px;font-weight:700;margin-top:1px}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+.pg{display:none;padding:24px 28px 80px;max-width:1100px}
+.pg.on{display:block}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.pt{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.ps{font-size:13px;color:var(--gr);margin-top:3px}
+.hr{display:flex;gap:8px;align-items:center}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:7px;border:1px solid var(--bd2);background:var(--w);color:var(--bk2);font-size:13px;cursor:pointer;transition:all .12s;font-family:inherit;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--bk);background:var(--bg)}
+.btn.bk{background:var(--bk);border-color:var(--bk);color:var(--w)}
+.btn.gn{background:var(--gn);border-color:var(--gn);color:var(--w);font-weight:600}
+.btn.gn:hover{background:var(--gndk)}
+.btn.am{background:var(--am);border-color:var(--am);color:var(--w);font-weight:600}
+.btn.sm{padding:5px 10px;font-size:12px}
+
+/* CARDS */
+.card{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;margin-bottom:13px}
+.ct{font-size:14px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;justify-content:space-between}
+
+/* METRICS */
+.mrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:16px}
+.mc{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.ml{font-size:11px;font-weight:600;color:var(--gr);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.mv{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1}
+.ms{font-size:11px;color:var(--gr);margin-top:4px}
+.mg .mv{color:var(--gndk)}.mr .mv{color:var(--rd)}.ma .mv{color:var(--am)}.mb .mv{color:var(--bl)}
+
+/* TABLE */
+.tw{background:var(--w);border:1px solid var(--bd);border-radius:10px;overflow:hidden;overflow-x:auto;margin-bottom:13px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--bg)}
+th{padding:9px 13px;text-align:left;font-size:11px;font-weight:600;color:var(--gr);border-bottom:1px solid var(--bd);white-space:nowrap;letter-spacing:.03em;text-transform:uppercase}
+td{padding:10px 13px;border-bottom:1px solid #F5F5F3;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg)}
+
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.bg{background:var(--gnbg);color:var(--gndk)}.ba{background:var(--ambg);color:#8B5000}.br{background:var(--rdbg);color:#B00000}.bb{background:var(--blbg);color:var(--bl)}.bgr{background:var(--bg2);color:var(--gr)}.bk2{background:var(--bk);color:var(--w)}
+
+/* PROGRESS */
+.pr{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.pl{font-size:12px;color:var(--bk2);min-width:110px;font-weight:500}
+.pt2{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .5s}
+.pv{font-size:12px;font-weight:600;min-width:34px;text-align:right}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+
+/* TABS */
+.tabs{display:flex;gap:1px;background:var(--bg2);border-radius:8px;padding:3px;width:fit-content;margin-bottom:16px}
+.tab{padding:7px 13px;border-radius:6px;font-size:12px;color:var(--gr);cursor:pointer;border:none;background:transparent;font-family:inherit;font-weight:600;transition:all .12s}
+.tab.on{background:var(--w);color:var(--bk);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* FORM */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fgr{display:flex;flex-direction:column;gap:5px}
+.fgr.full{grid-column:1/-1}
+label{font-size:11px;font-weight:600;color:var(--bk2);text-transform:uppercase;letter-spacing:.04em}
+input,textarea{background:var(--bg);border:1px solid var(--bd2);border-radius:7px;padding:9px 11px;color:var(--bk);font-size:13px;outline:none;font-family:inherit;width:100%;font-weight:500;transition:border .12s}
+input:focus,textarea:focus{border-color:var(--bk);background:var(--w)}
+input::placeholder,textarea::placeholder{color:var(--gr2);font-weight:400}
+textarea{resize:vertical;min-height:70px}
+.fsel{background:var(--bg);border:1px solid var(--bd2);border-radius:7px;padding:9px 11px;color:var(--bk);font-size:13px;outline:none;font-family:inherit;width:100%;font-weight:500;cursor:pointer}
+.fsel:focus{border-color:var(--bk)}
+.fsel option{background:var(--w)}
+.fa{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+
+/* MODAL */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.mbg.on{display:flex}
+.modal{background:var(--w);border:1px solid var(--bd2);border-radius:12px;padding:24px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal::-webkit-scrollbar{width:3px}
+.modal::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+.mtit{font-size:17px;font-weight:800;margin-bottom:16px;letter-spacing:-.3px}
+.mcl{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:transparent;color:var(--gr);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.mcl:hover{background:var(--rdbg);color:var(--rd);border-color:var(--rd)}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;z-index:200;background:var(--bk);border-radius:8px;padding:10px 16px;font-size:13px;color:var(--w);display:flex;align-items:center;gap:7px;transform:translateY(60px);opacity:0;transition:all .25s;font-weight:500}
+.toast.on{transform:translateY(0);opacity:1}
+
+/* GOAL BAR */
+.gbw{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;margin-bottom:13px}
+.gbh{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px}
+.gbt{font-size:13px;font-weight:700}
+.gbv{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.gbb{height:10px;background:var(--bg2);border-radius:5px;overflow:hidden;margin-bottom:7px}
+.gbf{height:100%;background:var(--gn);border-radius:5px;transition:width .8s ease}
+.gbft{display:flex;justify-content:space-between;font-size:11px;color:var(--gr)}
+
+/* HABIT */
+.hi{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)}
+.hi:last-child{border:none;padding-bottom:0}
+.hc{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--bd2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s;flex-shrink:0}
+.hc.on{background:var(--gn);border-color:var(--gn);color:var(--w)}
+
+/* SCRIPT */
+.sb2{background:var(--bg);border-radius:8px;padding:12px 14px;margin-bottom:8px;border-left:3px solid var(--bk)}
+.sl{font-size:10px;font-weight:700;color:var(--gr);letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.st{font-size:13px;color:var(--bk);line-height:1.7}
+.sb2.sg{border-left-color:var(--gn)}.sb2.sa{border-left-color:var(--am)}.sb2.sr{border-left-color:var(--rd)}
+
+/* COACH IA */
+.coach-box{background:var(--bk);border-radius:14px;padding:22px 24px;color:var(--w);margin-bottom:18px;position:relative;overflow:hidden}
+.coach-box::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(255,149,0,.08);border-radius:50%;pointer-events:none}
+.coach-label{font-size:10px;font-weight:700;color:var(--am);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+.coach-msg{font-size:15px;font-weight:600;line-height:1.7;color:#EEEEEE}
+.coach-sub{font-size:12px;color:#888888;line-height:1.6;margin-top:10px}
+.spin{width:14px;height:14px;border:2px solid #444;border-top-color:var(--am);border-radius:50%;animation:sp .6s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* MISION CARD */
+.mc2{background:var(--w);border:1.5px solid var(--bd);border-radius:10px;padding:15px 17px;margin-bottom:9px;transition:border .2s}
+.mc2.done{border-color:var(--gn);background:var(--gnbg)}
+.mc2-row{display:flex;align-items:flex-start;gap:11px}
+.mc2-chk{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--bd2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--w);transition:all .15s;flex-shrink:0;margin-top:1px}
+.mc2-chk.on{background:var(--gn);border-color:var(--gn)}
+.mc2-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.mc2.done .mc2-title{text-decoration:line-through;color:var(--gr)}
+.mc2-desc{font-size:12px;color:var(--gr);line-height:1.55}
+
+/* RULE */
+.rule-y{background:var(--gnbg);border:1px solid #AAECC4;border-radius:9px;padding:13px 15px}
+.rule-n{background:var(--rdbg);border:1px solid #FFCCCC;border-radius:9px;padding:13px 15px}
+.rule-t{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px}
+.rule-y .rule-t{color:var(--gndk)}.rule-n .rule-t{color:var(--rd)}
+.rule-i{font-size:13px;padding:3px 0;display:flex;gap:7px}
+.rule-y .rule-i{color:var(--gndk)}.rule-n .rule-i{color:#8B0000}
+.rule-i::before{content:'—';flex-shrink:0;font-weight:700}
+
+/* PUNISH */
+.pc{background:var(--rdbg);border:1px solid #FFCCCC;border-radius:9px;padding:12px 14px}
+.pc-t{font-size:11px;font-weight:700;color:var(--rd);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.pc-i{font-size:13px;color:#8B0000;padding:3px 0;display:flex;gap:7px}
+.pc-i::before{content:'>';font-weight:700;flex-shrink:0}
+
+/* SCHEDULE */
+.sr2{display:flex;gap:13px;padding:10px 13px;border-bottom:1px solid #F5F5F3;align-items:flex-start}
+.st2{font-size:12px;font-weight:600;color:var(--gr);min-width:90px;padding-top:1px}
+.sb3{flex:1}
+.sn{font-size:13px;font-weight:700}
+.sd{font-size:11px;color:var(--gr);margin-top:1px}
+.sc{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+
+/* PROJ FINANCIERA */
+.pf-row{display:flex;align-items:center;gap:12px;padding:10px 13px;border-bottom:1px solid #F5F5F3}
+.pf-row:last-child{border:none}
+.pf-mes{font-size:12px;font-weight:700;min-width:50px;color:var(--gr)}
+.pf-bar-wrap{flex:1}
+.pf-bar-track{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;margin-bottom:3px}
+.pf-bar-fill{height:100%;border-radius:4px}
+.pf-label{font-size:11px;color:var(--gr)}
+.pf-val{font-size:13px;font-weight:700;min-width:90px;text-align:right}
+
+/* ACTIVITY */
+.ai2{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #F5F5F3;align-items:flex-start}
+.ai2:last-child{border:none;padding-bottom:0}
+.ad{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.at{font-size:13px;font-weight:500}
+.as{font-size:11px;color:var(--gr);margin-top:1px}
+
+@media(max-width:768px){
+  .sb{width:54px}
+  .logo-n,.logo-s,.gm,.ns,.ni>span:not(.ni-ic),.sb-day,.sb-date{display:none}
+  .pg{padding:12px 10px 60px}
+  .mrow{grid-template-columns:1fr 1fr}
+  .g2,.g3,.fg{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="sb">
+  <div class="sb-logo">
+    <div class="logo-r">
+      <div class="logo-ic">C</div>
+      <div><div class="logo-n">CONQUISTA</div><div class="logo-s">Sistema Operativo</div></div>
+    </div>
+    <div class="gm">
+      <div class="gm-top"><span>Meta 30D</span><span id="sidePct">0%</span></div>
+      <div class="gm-bar"><div class="gm-fill" id="sideBar" style="width:0%"></div></div>
+      <div class="gm-amt" id="sideAmt">$0 / $1.000.000</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <div class="ns">Ejecutar</div>
+    <div class="ni on" onclick="go('coach')"><span class="ni-ic">💀</span><span>Coach IA</span></div>
+    <div class="ni" onclick="go('operativa')"><span class="ni-ic">🤖</span><span>IA Operativa</span></div>
+    <div class="ni" onclick="go('misiones')"><span class="ni-ic">🎯</span><span>Misiones</span></div>
+    <div class="ns">Ventas</div>
+    <div class="ni" onclick="go('dashboard')"><span class="ni-ic">⚡</span><span>Dashboard</span></div>
+    <div class="ni" onclick="go('tracker')"><span class="ni-ic">📊</span><span>Tracker diario</span></div>
+    <div class="ni" onclick="go('llamadas')"><span class="ni-ic">📞</span><span>Llamadas</span></div>
+    <div class="ni" onclick="go('clientes')"><span class="ni-ic">👥</span><span>Clientes</span></div>
+    <div class="ns">Sistema</div>
+    <div class="ni" onclick="go('script')"><span class="ni-ic">📋</span><span>Script</span></div>
+    <div class="ni" onclick="go('finanzas')"><span class="ni-ic">💰</span><span>Finanzas</span></div>
+    <div class="ni" onclick="go('proyeccion')"><span class="ni-ic">📈</span><span>Proyección</span></div>
+    <div class="ni" onclick="go('rutina')"><span class="ni-ic">🕐</span><span>Rutina Ulio</span></div>
+    <div class="ni" onclick="go('plan')"><span class="ni-ic">📅</span><span>Plan 4 semanas</span></div>
+    <div class="ni" onclick="go('disciplina')"><span class="ni-ic">🔥</span><span>Disciplina</span></div>
+    <div class="ni" onclick="go('metaads')"><span class="ni-ic">🎬</span><span>Meta Ads</span></div>
+  </nav>
+  <div class="sb-ft">
+    <div class="sb-date" id="sfDate"></div>
+    <div class="sb-day" id="sfDay"></div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- IA OPERATIVA V5 — SISTEMA COMPLETO -->
+<div class="pg on" id="p-coach">
+  <div class="ph">
+    <div>
+      <div class="pt">IA Operativa V5</div>
+      <div class="ps">Tu sistema completo de vida y negocio — no un asistente, un operador</div>
+    </div>
+    <div class="hr">
+      <button class="btn am" onclick="v5Ejecutar()">⚡ Ejecutar sistema</button>
+      <button class="btn bk" onclick="v5Reset()">↺ Resetear</button>
+    </div>
+  </div>
+
+  <!-- VARIABLES DEL DÍA -->
+  <div class="card" style="border:2px solid var(--bk);margin-bottom:16px">
+    <div class="ct" style="font-size:15px;font-weight:800">Variables del día <span style="font-size:12px;font-weight:400;color:var(--gr)">60 segundos — llena y ejecuta</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:11px;margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Día</label>
+        <select id="v5-dia" class="fsel" style="font-size:13px"><option value="lunes">Lunes</option><option value="martes">Martes</option><option value="miercoles">Miércoles</option><option value="jueves">Jueves</option><option value="viernes">Viernes</option><option value="sabado">Sábado</option><option value="domingo">Domingo</option></select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Energía (1-10)</label>
+        <input type="number" id="v5-energia" min="1" max="10" placeholder="8" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Horas dormidas</label>
+        <input type="number" id="v5-sueno" min="1" max="12" placeholder="7" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Llamadas ayer</label>
+        <input type="number" id="v5-llamadas" min="0" placeholder="60" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Cierres últimos 3 días</label>
+        <input type="number" id="v5-cierres" min="0" placeholder="0" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Demos hoy</label>
+        <input type="number" id="v5-demos" min="0" placeholder="1" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Leads sin seguimiento</label>
+        <input type="number" id="v5-leads" min="0" placeholder="3" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Reels esta semana</label>
+        <input type="number" id="v5-reels" min="0" placeholder="1" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Hábitos cumplidos (de 7)</label>
+        <input type="number" id="v5-habitos" min="0" max="7" placeholder="5" style="font-size:13px">
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
+      <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Mis ideas / decisiones del día (opcional)</label>
+      <textarea id="v5-ideas" rows="2" style="width:100%" placeholder="Ideas propias, decisiones que quiero tomar, algo que quiero cambiar... El sistema las analiza y te dice si te acercan o alejan de la meta."></textarea>
+    </div>
+    <button class="btn am" onclick="v5Ejecutar()" style="width:100%;font-size:14px;padding:13px;font-weight:700">⚡ Ejecutar sistema V5 completo</button>
+  </div>
+
+  <!-- MODO DEL DÍA -->
+  <div id="v5-modoBox" style="display:none;margin-bottom:16px">
+    <div style="background:var(--bk);border-radius:14px;padding:22px 24px;color:var(--w);position:relative;overflow:hidden">
+      <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,149,0,.07);pointer-events:none"></div>
+      <div id="v5-modolabel" style="font-size:10px;font-weight:700;color:var(--am);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">MODO DEL DÍA</div>
+      <div id="v5-modotitulo" style="font-size:30px;font-weight:800;letter-spacing:-.5px;color:#FFFFFF;margin-bottom:8px"></div>
+      <div id="v5-modosub" style="font-size:13px;color:#AAAAAA;line-height:1.6"></div>
+    </div>
+  </div>
+
+  <!-- RESULTADO V5 -->
+  <div id="v5-resultado" style="display:none">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px">
+      <div class="card" style="border-left:3px solid var(--gn)">
+        <div class="ct" style="color:var(--gndk)">Plan del día con horarios</div>
+        <div id="v5-plan" style="font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div class="card" style="border-left:3px solid var(--rd)">
+          <div class="ct" style="color:var(--rd)">Prohibido hoy</div>
+          <div id="v5-prohibido" style="font-size:13px;color:var(--bk2);line-height:1.7;white-space:pre-wrap"></div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--am)">
+          <div class="ct" style="color:var(--am)">Meta mínima no negociable</div>
+          <div id="v5-meta" style="font-size:14px;font-weight:600;color:var(--bk);line-height:1.6"></div>
+        </div>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:13px">
+      <div class="card">
+        <div class="ct">Diagnóstico brutal</div>
+        <div id="v5-diagnostico" style="font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap"></div>
+      </div>
+      <div class="card">
+        <div class="ct" style="color:var(--bl)">Salud primal de hoy</div>
+        <div id="v5-salud" style="font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap"></div>
+      </div>
+    </div>
+    <div class="card" style="border:1.5px solid var(--am)">
+      <div class="ct">Sistema de clientes — qué hacer hoy</div>
+      <div id="v5-clientes" style="font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Optimización para mañana</div>
+      <div id="v5-optimizacion" style="font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap"></div>
+    </div>
+  </div>
+
+  <!-- PREGUNTAS RÁPIDAS -->
+  <div class="card">
+    <div class="ct">Consulta directa al sistema</div>
+    <textarea id="v5-consulta" rows="3" style="width:100%;margin-bottom:10px" placeholder="Cualquier consulta específica: una objeción que no pude manejar, cómo abordar un cliente específico, qué hacer con un lead que no responde, estrategia para esta semana..."></textarea>
+    <button class="btn am" onclick="v5Consulta()" style="width:100%">⚡ Consultar sistema</button>
+    <div id="v5-consultaResp" style="margin-top:13px"></div>
+  </div>
+
+  <div class="card">
+    <div class="ct">Accesos rápidos</div>
+    <div style="display:flex;flex-wrap:wrap;gap:7px" id="v5-quickbtns"></div>
+  </div>
+</div>
+
+<!-- MISIONES -->
+<div class="pg" id="p-misiones">
+  <div class="ph">
+    <div><div class="pt">Misiones de la semana</div><div class="ps">Completa esto o te quedas exactamente donde estás</div></div>
+    <div class="hr">
+      <button class="btn am" onclick="misionsAI()">⚡ Generar con IA</button>
+    </div>
+  </div>
+  <div id="misionMotiv"></div>
+  <div id="misionProg" style="margin-bottom:16px"></div>
+  <div id="misionCards"></div>
+  <div class="card" style="margin-top:4px">
+    <div class="ct">Cuéntame cómo va tu semana</div>
+    <textarea id="misionCtx" rows="3" style="width:100%;margin-bottom:10px" placeholder="Cuántas llamadas hiciste, cuánto cerraste, qué te está costando esta semana..."></textarea>
+    <button class="btn am" onclick="misionsAI()" style="width:100%">⚡ Generar misiones personalizadas con IA</button>
+  </div>
+</div>
+
+<!-- IA OPERATIVA V3 -->
+<div class="pg" id="p-operativa">
+  <div class="ph">
+    <div><div class="pt">IA Operativa</div><div class="ps">El sistema decide tu día. Tú solo ejecutas.</div></div>
+    <div class="hr">
+      <button class="btn am" onclick="decidirDia()" id="btnDecidir">⚡ Decidir mi día</button>
+      <button class="btn" style="border-color:var(--rd);color:var(--rd)" onclick="protocoloEmergencia()">🚨 Emergencia</button>
+    </div>
+  </div>
+
+  <!-- INPUT RÁPIDO -->
+  <div class="card" style="border:2px solid var(--bk);margin-bottom:16px">
+    <div class="ct" style="font-size:15px">Variables del día <span style="font-size:12px;font-weight:400;color:var(--gr)">llena esto en 60 segundos</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px" id="varInputs">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Día de la semana</label>
+        <select id="v-dia" class="fsel" style="font-size:13px">
+          <option value="lunes">Lunes</option><option value="martes">Martes</option>
+          <option value="miercoles">Miércoles</option><option value="jueves">Jueves</option>
+          <option value="viernes">Viernes</option><option value="sabado">Sábado</option>
+          <option value="domingo">Domingo</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Energía (1-10)</label>
+        <input type="number" id="v-energia" min="1" max="10" placeholder="8" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Horas dormidas</label>
+        <input type="number" id="v-sueno" min="1" max="12" placeholder="7" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Llamadas ayer</label>
+        <input type="number" id="v-llamadas" min="0" placeholder="60" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Cierres últimos 3 días</label>
+        <input type="number" id="v-cierres" min="0" placeholder="0" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Demos hoy</label>
+        <input type="number" id="v-demos" min="0" placeholder="2" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Leads sin seguimiento</label>
+        <input type="number" id="v-leads" min="0" placeholder="5" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Reels esta semana</label>
+        <input type="number" id="v-reels" min="0" placeholder="1" style="font-size:13px">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Hábitos ayer (de 8)</label>
+        <input type="number" id="v-habitos" min="0" max="8" placeholder="6" style="font-size:13px">
+      </div>
+    </div>
+    <button class="btn am" onclick="decidirDia()" style="width:100%;margin-top:16px;font-size:14px;padding:12px">⚡ El sistema decide mi día ahora</button>
+  </div>
+
+  <!-- MODO DEL DÍA (resultado) -->
+  <div id="modoDelDia" style="display:none;margin-bottom:16px">
+    <div style="background:var(--bk);border-radius:14px;padding:22px 24px;color:var(--w);position:relative;overflow:hidden">
+      <div style="position:absolute;top:-30px;right:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,149,0,.07);pointer-events:none"></div>
+      <div id="modoLabel" style="font-size:11px;font-weight:700;color:var(--am);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">MODO DEL DÍA</div>
+      <div id="modoTitulo" style="font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px;color:#FFFFFF"></div>
+      <div id="modoRazon" style="font-size:13px;color:#AAAAAA;line-height:1.65"></div>
+    </div>
+  </div>
+
+  <!-- PLAN DEL DÍA (resultado IA) -->
+  <div id="planDelDia" style="display:none">
+    <div class="g2">
+      <div class="card">
+        <div class="ct" style="color:var(--gn)">Plan exacto por bloques</div>
+        <div id="planBloques"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div class="card" style="border-left:3px solid var(--rd)">
+          <div class="ct" style="color:var(--rd)">NO hacer hoy</div>
+          <div id="planNoHacer"></div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--am)">
+          <div class="ct" style="color:var(--am)">Meta mínima no negociable</div>
+          <div id="planMeta"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border:1.5px solid var(--am);margin-top:0">
+      <div class="ct">Análisis completo del sistema</div>
+      <div id="planCompleto" style="font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap"></div>
+    </div>
+  </div>
+
+  <!-- SCORE DEL DÍA -->
+  <div class="card" style="margin-top:0">
+    <div class="ct">Score operativo <span style="font-size:12px;font-weight:400;color:var(--gr)">¿cómo fue el día?</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Llamadas (0-120)</label>
+        <input type="number" id="s-calls" min="0" max="120" placeholder="80">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Seguimientos (0-30)</label>
+        <input type="number" id="s-segu" min="0" max="30" placeholder="15">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Demos/Cierres (0-5)</label>
+        <input type="number" id="s-demos" min="0" max="5" placeholder="2">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Contenido (0-5)</label>
+        <input type="number" id="s-cont" min="0" max="5" placeholder="1">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.05em">Hábitos (0-8)</label>
+        <input type="number" id="s-hab" min="0" max="8" placeholder="7">
+      </div>
+    </div>
+    <button class="btn bk" onclick="calcScore()" style="width:100%">Calcular score del día</button>
+    <div id="scoreResult" style="margin-top:14px"></div>
+  </div>
+
+  <!-- PROTOCOLOS -->
+  <div class="g3" style="margin-top:0">
+    <div class="card" style="border-left:3px solid var(--rd);cursor:pointer" onclick="protocolo('no_cierro')">
+      <div style="font-size:18px;margin-bottom:7px">💸</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">No estoy cerrando</div>
+      <div style="font-size:12px;color:var(--gr);line-height:1.5">3 días sin cerrar. Activa revisión total del proceso.</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--am);cursor:pointer" onclick="protocolo('disperso')">
+      <div style="font-size:18px;margin-bottom:7px">🌀</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">Estoy disperso</div>
+      <div style="font-size:12px;color:var(--gr);line-height:1.5">Saltando tareas. Foco perdido. Reset inmediato.</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--bl);cursor:pointer" onclick="protocolo('finde')">
+      <div style="font-size:18px;margin-bottom:7px">📱</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">Es fin de semana</div>
+      <div style="font-size:12px;color:var(--gr);line-height:1.5">Modo contenido. Reels, autoridad, preparar lunes.</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--gn);cursor:pointer" onclick="protocolo('falle')">
+      <div style="font-size:18px;margin-bottom:7px">💀</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">Fallé hoy</div>
+      <div style="font-size:12px;color:var(--gr);line-height:1.5">No cumpliste. Sin excusas. Protocolo de recuperación.</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--gndk);cursor:pointer" onclick="protocolo('cerre')">
+      <div style="font-size:18px;margin-bottom:7px">🏆</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">Cerré un cliente</div>
+      <div style="font-size:12px;color:var(--gr);line-height:1.5">Entrega rápida, caso de estudio, seguir vendiendo.</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--gr);cursor:pointer" onclick="protocolo('energia_baja')">
+      <div style="font-size:18px;margin-bottom:7px">🔋</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">Energía baja</div>
+      <div style="font-size:12px;color:var(--gr);line-height:1.5">Recuperación táctica. Mantener racha sin quemarse.</div>
+    </div>
+  </div>
+  <div id="protocoloResult" style="display:none">
+    <div class="card" style="border:2px solid var(--am)">
+      <div class="ct">⚡ Protocolo activado</div>
+      <div id="protocoloContent" style="font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="pg" id="p-dashboard">
+  <div class="ph">
+    <div><div class="pt">Dashboard</div><div class="ps" id="dashDate"></div></div>
+    <div class="hr">
+      <span id="dayBdg" class="bdg bk2">Día 1 de 30</span>
+      <button class="btn gn" onclick="go('tracker');setTimeout(function(){openM('newDay')},80)">+ Registrar día</button>
+    </div>
+  </div>
+  <div class="gbw">
+    <div class="gbh">
+      <div><div class="gbt">META: $1.000.000 CLP en 30 días</div><div style="font-size:11px;color:var(--gr);margin-top:2px">Clínicas estéticas Chile · cold calling</div></div>
+      <div style="text-align:right"><div class="gbv"><span id="gbAmt">$0</span> <span style="font-size:13px;font-weight:500;color:var(--gr)">/ $1.000.000</span></div></div>
+    </div>
+    <div class="gbb"><div class="gbf" id="gbFill" style="width:0%"></div></div>
+    <div class="gbft"><span id="gbPct">0%</span><span id="gbRem">$1.000.000 restante</span><span id="gbDia">$33.333/día</span></div>
+  </div>
+  <div class="mrow" id="dashM"></div>
+  <div class="g2">
+    <div class="card"><div class="ct">Hoy <span style="font-size:12px;font-weight:400;color:var(--gr)" id="tdLbl"></span></div><div id="tdSumm"></div></div>
+    <div class="card"><div class="ct">Actividad</div><div id="actFd"></div></div>
+  </div>
+  <div class="card"><div class="ct">Proyección</div><div id="proyD"></div></div>
+</div>
+
+<!-- TRACKER -->
+<div class="pg" id="p-tracker">
+  <div class="ph">
+    <div><div class="pt">Tracker diario</div><div class="ps">30 días de ejecución</div></div>
+    <button class="btn gn" onclick="openM('newDay')">+ Registrar día</button>
+  </div>
+  <div class="mrow" id="trackM"></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Día</th><th>Fecha</th><th>Llamadas</th><th>Interesados</th><th>Demos</th><th>Cierres</th><th>Dinero</th><th>Conv.</th><th></th></tr></thead>
+      <tbody id="trackBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- LLAMADAS -->
+<div class="pg" id="p-llamadas">
+  <div class="ph">
+    <div><div class="pt">Llamadas agendadas</div><div class="ps">Demos y seguimientos del día</div></div>
+    <div class="hr">
+      <button class="btn" onclick="aiPipeline()">✦ Analizar con IA</button>
+      <button class="btn gn" onclick="openM('newLL')">+ Agendar</button>
+    </div>
+  </div>
+  <div class="mrow" id="callM"></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Hora</th><th>Nombre</th><th>Tipo</th><th>Objetivo</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody id="callBody"></tbody>
+    </table>
+  </div>
+  <div id="aiPipeBox" style="display:none">
+    <div class="card"><div class="ct">✦ Análisis IA del pipeline</div><div id="aiPipeContent"></div></div>
+  </div>
+</div>
+
+<!-- CLIENTES -->
+<div class="pg" id="p-clientes">
+  <div class="ph">
+    <div><div class="pt">Clientes</div><div class="ps">Pipeline completo</div></div>
+    <div class="hr">
+      <button class="btn" onclick="aiClientes()">✦ IA: qué hacer hoy</button>
+      <button class="btn gn" onclick="openM('newC')">+ Agregar</button>
+    </div>
+  </div>
+  <div class="tabs" id="cliTabs">
+    <button class="tab on" onclick="filtC('',this)">Todos</button>
+    <button class="tab" onclick="filtC('lead',this)">Lead</button>
+    <button class="tab" onclick="filtC('interesado',this)">Interesado</button>
+    <button class="tab" onclick="filtC('demo',this)">Demo</button>
+    <button class="tab" onclick="filtC('cerrado',this)">Cerrado</button>
+  </div>
+  <div class="mrow" id="cliM"></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Negocio</th><th>Nicho</th><th>Ticket</th><th>Estado</th><th>Próxima acción</th><th>Acciones</th></tr></thead>
+      <tbody id="cliBody"></tbody>
+    </table>
+  </div>
+  <div id="aiCliBox" style="display:none">
+    <div class="card"><div class="ct">✦ IA: qué hacer con cada cliente hoy</div><div id="aiCliContent"></div></div>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<div class="pg" id="p-script">
+  <div class="ph"><div><div class="pt">Script de ventas</div><div class="ps">Llamada en frío — clínicas estéticas</div></div></div>
+  <div class="g2" style="margin-bottom:13px">
+    <div class="card">
+      <div class="ct">La oferta</div>
+      <div style="background:var(--bg);border-radius:8px;padding:13px;font-size:14px;font-weight:600;line-height:1.6;border-left:3px solid var(--gn);margin-bottom:12px">"No vendo páginas web. Ayudo a clínicas a recibir más clientes por WhatsApp en menos de 7 días."</div>
+      <div id="ofertaL"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Precios por perfil</div>
+      <div id="precioL"></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">Script completo</div><div id="scriptL"></div></div>
+  <div class="card"><div class="ct">Cómo escalar el precio</div><div class="g3" id="ticketL"></div></div>
+</div>
+
+<!-- FINANZAS -->
+<div class="pg" id="p-finanzas">
+  <div class="ph">
+    <div><div class="pt">Finanzas</div><div class="ps">Ingresos, gastos y margen neto</div></div>
+    <button class="btn gn" onclick="openM('newTx')">+ Movimiento</button>
+  </div>
+  <div class="mrow" id="finM"></div>
+  <div class="g2">
+    <div class="card"><div class="ct">Inversiones fijas</div><div id="invL"></div></div>
+    <div class="card"><div class="ct">Margen neto</div><div id="margenB"></div></div>
+  </div>
+  <div class="tw"><table><thead><tr><th>Descripción</th><th>Tipo</th><th>Monto</th><th>Categoría</th><th>Fecha</th></tr></thead><tbody id="txBody"></tbody></table></div>
+</div>
+
+<!-- PROYECCIÓN FINANCIERA -->
+<div class="pg" id="p-proyeccion">
+  <div class="ph"><div><div class="pt">Proyección financiera</div><div class="ps">Chile → LATAM → España → USA · Camino al $10k/mes</div></div></div>
+  <div class="card">
+    <div class="ct">Proyección mes a mes <span style="font-size:12px;font-weight:400;color:var(--gr)">basada en el sistema de Ulio AI</span></div>
+    <div id="projTable"></div>
+  </div>
+  <div class="card" style="background:var(--bk);border-color:var(--bk)">
+    <div style="font-size:13px;font-weight:700;color:var(--am);margin-bottom:8px">⚡ La regla de oro</div>
+    <div style="font-size:14px;color:#EEEEEE;line-height:1.7;font-weight:500">Si ejecutas el sistema todos los días: no es si llegarás al $10K — es cuándo.</div>
+    <div style="font-size:13px;color:#888;margin-top:8px;line-height:1.6">Chile · 2 clientes · validación → LATAM · volumen → España · precio → USA · escala</div>
+  </div>
+</div>
+
+<!-- RUTINA ULIO -->
+<div class="pg" id="p-rutina">
+  <div class="ph"><div><div class="pt">Rutina 24h — Sistema Ulio</div><div class="ps">4:30am — 9:00pm · 10-12h de trabajo · Pico 5-7am</div></div></div>
+  <div class="g3" style="margin-bottom:16px" id="rutinaStats"></div>
+  <div class="card"><div class="ct">Plan hora por hora</div><div id="rutinaList"></div></div>
+</div>
+
+<!-- PLAN 4 SEMANAS -->
+<div class="pg" id="p-plan">
+  <div class="ph"><div><div class="pt">Plan 4 semanas</div><div class="ps">Semana 1-2: Ulio + Demo · Semana 3: Ventas · Semana 4: Meta Ads</div></div></div>
+  <div id="planContainer"></div>
+</div>
+
+<!-- DISCIPLINA -->
+<div class="pg" id="p-disciplina">
+  <div class="ph">
+    <div><div class="pt">Disciplina</div><div class="ps">Identidad que no se rompe</div></div>
+    <button class="btn gn" onclick="saveDisc()">Guardar hábitos</button>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ct">Hábitos de hoy <span style="font-size:12px;font-weight:400;color:var(--gr)" id="habDate"></span></div><div id="habList"></div></div>
+    <div class="card">
+      <div class="ct">Castigos</div>
+      <div class="pc">
+        <div class="pc-t">Si fallas un hábito core:</div>
+        <div class="pc-i">Correr 40 km al día siguiente</div>
+        <div class="pc-i">300 llamadas extra esa semana</div>
+        <div class="pc-i">Sin ocio por 7 días completos</div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:0">
+    <div class="ct">Registro</div>
+    <div class="fg">
+      <div class="fgr"><label>Energía (1-10)</label><input type="number" id="eLvl" min="1" max="10" placeholder="8"></div>
+      <div class="fgr"><label>Estado mental</label><select id="eSt" class="fsel"><option>Enfocado</option><option>Motivado</option><option>Neutral</option><option>Cansado</option><option>Bajo</option></select></div>
+      <div class="fgr full"><label>¿Qué haré diferente mañana?</label><textarea id="eMej" placeholder="Una cosa concreta..."></textarea></div>
+    </div>
+    <button class="btn bk" style="margin-top:10px" onclick="saveDisc()">Guardar</button>
+  </div>
+  <div class="card"><div class="ct">Historial</div><div id="rachaH"></div></div>
+</div>
+
+<!-- META ADS -->
+<div class="pg" id="p-metaads">
+  <div class="ph"><div><div class="pt">Meta Ads + Pletor</div><div class="ps">Workflow: Claude → Meta Ads Library → Pletor → Creativos en masa</div></div></div>
+  <div class="card" style="background:var(--bk);border-color:var(--bk);margin-bottom:13px">
+    <div style="font-size:11px;font-weight:700;color:var(--am);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Para la Semana 4 en adelante</div>
+    <div style="font-size:14px;color:#EEEEEE;font-weight:600;line-height:1.6">Combina llamadas en frío con Meta Ads. Un canal te da volumen. El otro te da escala sin trabajar más horas.</div>
+  </div>
+  <div class="g2" style="margin-bottom:13px">
+    <div class="card">
+      <div class="ct">El flujo completo</div>
+      <div id="metaFlujo"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Configuración mínima</div>
+      <div id="metaConfig"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Presupuesto y métricas</div>
+    <div id="metaMetrics"></div>
+  </div>
+</div>
+
+</div></div>
+
+<!-- MODALS -->
+<div class="mbg" id="m-newDay">
+  <div class="modal">
+    <button class="mcl" onclick="closeM('newDay')">x</button>
+    <div class="mtit">Registrar día</div>
+    <div class="fg">
+      <div class="fgr"><label>Día #</label><input id="d-n" type="number" min="1" max="30" placeholder="1"></div>
+      <div class="fgr"><label>Fecha</label><input id="d-f"></div>
+      <div class="fgr"><label>Llamadas</label><input id="d-c" type="number" placeholder="80"></div>
+      <div class="fgr"><label>Interesados</label><input id="d-i" type="number" placeholder="8"></div>
+      <div class="fgr"><label>Demos</label><input id="d-d" type="number" placeholder="3"></div>
+      <div class="fgr"><label>Cierres</label><input id="d-cl" type="number" placeholder="1"></div>
+      <div class="fgr"><label>Dinero (CLP)</label><input id="d-m" type="number" placeholder="150000"></div>
+      <div class="fgr full"><label>Notas</label><textarea id="d-nt" placeholder="Qué funcionó, qué mejorar..."></textarea></div>
+    </div>
+    <div class="fa"><button class="btn" onclick="closeM('newDay')">Cancelar</button><button class="btn gn" onclick="saveDay()">Guardar</button></div>
+  </div>
+</div>
+
+<div class="mbg" id="m-newLL">
+  <div class="modal">
+    <button class="mcl" onclick="closeM('newLL')">x</button>
+    <div class="mtit">Agendar llamada</div>
+    <div class="fg">
+      <div class="fgr full"><label>Nombre / Negocio</label><input id="ll-n" placeholder="Clínica Estética Lumina"></div>
+      <div class="fgr"><label>Teléfono</label><input id="ll-t" placeholder="+56 9 ..."></div>
+      <div class="fgr"><label>Hora</label><input id="ll-h" placeholder="10:30"></div>
+      <div class="fgr"><label>Tipo</label><select id="ll-tp" class="fsel"><option value="fria">Llamada en frío</option><option value="demo">Demo agendada</option><option value="seguimiento">Seguimiento</option><option value="cierre">Cierre</option></select></div>
+      <div class="fgr full"><label>Objetivo</label><input id="ll-o" placeholder="Presentar oferta y agendar demo"></div>
+      <div class="fgr full"><label>Contexto (qué sé de esta clínica)</label><textarea id="ll-c" placeholder="Instagram activo, sin web, estimado $100-150k..."></textarea></div>
+    </div>
+    <div class="fa"><button class="btn" onclick="closeM('newLL')">Cancelar</button><button class="btn gn" onclick="saveLL()">Agendar</button></div>
+  </div>
+</div>
+
+<div class="mbg" id="m-newC">
+  <div class="modal">
+    <button class="mcl" onclick="closeM('newC')">x</button>
+    <div class="mtit">Agregar cliente</div>
+    <div class="fg">
+      <div class="fgr full"><label>Nombre / Negocio</label><input id="c-n" placeholder="Clínica Estética Lumina"></div>
+      <div class="fgr"><label>Nicho</label><select id="c-ni" class="fsel"><option>Depilación láser</option><option>Botox/Rellenos</option><option>Faciales</option><option>Dental</option><option>Múltiples servicios</option></select></div>
+      <div class="fgr"><label>Ticket (CLP)</label><input id="c-t" type="number" placeholder="150000"></div>
+      <div class="fgr"><label>Estado</label><select id="c-e" class="fsel"><option value="lead">Lead</option><option value="interesado">Interesado</option><option value="demo">Demo</option><option value="cerrado">Cerrado</option></select></div>
+      <div class="fgr full"><label>Próxima acción</label><input id="c-a" placeholder="Enviar propuesta hoy a las 16:00"></div>
+      <div class="fgr"><label>Teléfono</label><input id="c-tel" placeholder="+56 9 ..."></div>
+      <div class="fgr full"><label>Contexto</label><textarea id="c-no" placeholder="Objeciones, nivel de interés, notas..."></textarea></div>
+    </div>
+    <div class="fa"><button class="btn" onclick="closeM('newC')">Cancelar</button><button class="btn gn" onclick="saveC()">Guardar</button></div>
+  </div>
+</div>
+
+<div class="mbg" id="m-newTx">
+  <div class="modal">
+    <button class="mcl" onclick="closeM('newTx')">x</button>
+    <div class="mtit">Registrar movimiento</div>
+    <div class="fg">
+      <div class="fgr full"><label>Descripción</label><input id="t-d" placeholder="Venta landing Clínica Lumina"></div>
+      <div class="fgr"><label>Tipo</label><select id="t-t" class="fsel"><option value="in">Ingreso</option><option value="out">Gasto</option><option value="inv">Inversión</option></select></div>
+      <div class="fgr"><label>Monto (CLP)</label><input id="t-m" type="number" placeholder="150000"></div>
+      <div class="fgr full"><label>Categoría</label><select id="t-c" class="fsel"><option>Venta landing page</option><option>Herramienta/Software</option><option>Alimentación</option><option>Transporte</option><option>Otro</option></select></div>
+    </div>
+    <div class="fa"><button class="btn" onclick="closeM('newTx')">Cancelar</button><button class="btn gn" onclick="saveTx()">Guardar</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toastEl"><span id="toastMsg"></span></div>
+
+<script>
+var DBKEY='conquista_v4';
+var APISTORE='cq_apikey';
+var AKEY=localStorage.getItem(APISTORE)||'';
+
+function loadDB(){try{return JSON.parse(localStorage.getItem(DBKEY))||seedDB()}catch(e){return seedDB()}}
+function saveDB(){localStorage.setItem(DBKEY,JSON.stringify(DB))}
+function hoy(){return new Date().toLocaleDateString('es-CL')}
+function fmt(n){return '$'+Math.round(n||0).toLocaleString('es-CL')}
+function pct(v,t){return t?Math.min(100,Math.round(v/t*100)):0}
+
+function seedDB(){
+  return{
+    days:[],
+    lls:[
+      {id:1,nombre:'Clinica Estetica Lumina',tel:'+56 9 1234 5678',hora:'09:00',tipo:'demo',obj:'Mostrar mockup y cerrar',ctx:'Instagram activo, sin web. Estimado $150k.',estado:'pendiente'},
+      {id:2,nombre:'Centro Botox Vina',tel:'+56 9 8765 4321',hora:'11:30',tipo:'seguimiento',obj:'Confirmar propuesta',ctx:'Propuesta $100k enviada. Tiene socia.',estado:'pendiente'},
+    ],
+    clientes:[
+      {id:1,nombre:'Clinica Estetica Lumina',nicho:'Depilacion laser',ticket:150000,estado:'demo',accion:'Enviar mockup hoy',tel:'+56 9 1234 5678',notas:'Muy interesada.'},
+      {id:2,nombre:'Centro Botox Vina',nicho:'Botox / Rellenos',ticket:100000,estado:'interesado',accion:'Llamar hoy',tel:'+56 9 8765 4321',notas:'Decision en conjunto con socia.'},
+      {id:3,nombre:'Dental Estetica Sur',nicho:'Dental',ticket:70000,estado:'lead',accion:'Llamar a las 14:00',tel:'+56 9 5555 1111',notas:'Llamada en frio.'},
+    ],
+    txs:[
+      {id:1,desc:'Venta Clinica Lumina',tipo:'in',monto:150000,cat:'Venta landing page',fecha:hoy()},
+      {id:2,desc:'Claude Pro',tipo:'inv',monto:23750,cat:'Herramienta/Software',fecha:hoy()},
+      {id:3,desc:'Canva Pro',tipo:'inv',monto:12350,cat:'Herramienta/Software',fecha:hoy()},
+      {id:4,desc:'Ulio AI',tipo:'inv',monto:28500,cat:'Herramienta/Software',fecha:hoy()},
+    ],
+    habits:{},discLogs:{},
+    misiones:[
+      {titulo:'80 llamadas minimas por dia sin excusas',desc:'No hay nada que negociar. 80 es el suelo, no el techo.',tipo:'ventas',done:false},
+      {titulo:'Cerrar 2 clientes nuevos esta semana',desc:'Un cliente es suerte. Dos clientes es sistema.',tipo:'ventas',done:false},
+      {titulo:'Levantarse 5am todos los dias',desc:'El 99% de la gente duerme. Tu ya ganaste antes de que ellos abran los ojos.',tipo:'disciplina',done:false},
+      {titulo:'Entrenamiento fisico diario',desc:'Cuerpo debil = mente debil. Sin ejercicio no hay claridad para cerrar.',tipo:'cuerpo',done:false},
+      {titulo:'Sin redes en horario de trabajo',desc:'Cada vez que abres Instagram antes de las 7pm le robas dinero a tu familia.',tipo:'disciplina',done:false},
+    ],
+    lid:3,cid:4,tid:5
+  };
+}
+
+var DB=loadDB();
+var cFilt='';
+
+var PAGES=['coach','operativa','misiones','dashboard','tracker','llamadas','clientes','script','finanzas','proyeccion','rutina','plan','disciplina','metaads'];
+
+function go(pg){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.ni').forEach(function(n,i){n.classList.toggle('on',PAGES[i]===pg)});
+  document.getElementById('p-'+pg).classList.add('on');
+  var map={
+    coach:renderCoach,operativa:renderOperativa,misiones:renderMisiones,dashboard:renderDash,
+    tracker:renderTracker,llamadas:renderLlamadas,clientes:function(){renderClientes(cFilt)},
+    script:renderScript,finanzas:renderFinanzas,proyeccion:renderProyeccion,
+    rutina:renderRutina,plan:renderPlan,disciplina:renderDisc,metaads:renderMetaAds
+  };
+  if(map[pg])map[pg]();
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function getKey(){
+  if(!AKEY){
+    AKEY=prompt('API key de Anthropic (sk-ant-...):');
+    if(!AKEY)return false;
+    localStorage.setItem(APISTORE,AKEY);
+  }
+  return true;
+}
+
+async function claudeCall(prompt,maxT){
+  maxT=maxT||800;
+  var res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':AKEY,'anthropic-version':'2023-06-01'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxT,messages:[{role:'user',content:prompt}]})
+  });
+  if(!res.ok){var e=await res.json().catch(function(){return{}});throw new Error(e.error&&e.error.message||'Error '+res.status);}
+  var d=await res.json();
+  return d.content.filter(function(c){return c.type==='text'}).map(function(c){return c.text}).join('');
+}
+
+function showAILoading(elId,msg){
+  document.getElementById(elId).innerHTML='<div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--gr);padding:12px 0"><div class="spin"></div>'+msg+'</div>';
+}
+function showAIResult(elId,text){
+  document.getElementById(elId).innerHTML='<div style="font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap">'+text+'</div>';
+}
+function showAIError(elId,msg){
+  document.getElementById(elId).innerHTML='<div style="color:var(--rd);font-size:13px">Error: '+msg+'. Verifica tu API key y creditos en console.anthropic.com/billing</div>';
+}
+
+// ── IA OPERATIVA V5 ───────────────────────────────────────────
+var V5_PROMPT_MASTER = 'Actua como mi sistema operativo completo de vida y negocio (IA OPERATIVA V5).\n\nTu funcion es optimizar 3 niveles al mismo tiempo:\n1. Mi ejecucion personal diaria\n2. Mi generacion de dinero (ventas)\n3. Mi sistema de clientes (resultados reales)\n\nNo eres un asistente. Eres un operador estrategico.\n\nCONTEXTO:\n- Tengo 18 anos, estoy en Chile\n- Vendo landing pages, automatizacion e IA a clinicas y pymes\n- Uso llamadas en frio + contenido Instagram\n- Meta: $1.000.000 CLP en 30 dias\n- Las llamadas en frio comienzan SIEMPRE entre 08:40 y 09:30\n- Sabado = contenido. Domingo = planificacion\n- Sin redes sociales en la manana\n- Filosofia espiritual: oracion diaria + lectura biblica al despertar\n- Salud primal: carne, huevos, frutas, palta, lacteos naturales. Sin azucar ni ultraprocesados. Sol diario.\n\nDINERO GENERADO HASTA HOY: [DINERO]\nLLAMADAS TOTALES: [LLAMADAS_TOT]\nCIERRES TOTALES: [CIERRES_TOT]\nCLIENTES ACTIVOS: [CLI_ACTIVOS]\n\nVARIABLES DEL DIA:\n- Dia: [DIA]\n- Energia: [ENERGIA]/10\n- Horas dormidas: [SUENO]\n- Llamadas ayer: [LLAMADAS_AYER]\n- Cierres ultimos 3 dias: [CIERRES_3D]\n- Demos hoy: [DEMOS]\n- Leads sin seguimiento: [LEADS_SIN]\n- Reels esta semana: [REELS]\n- Habitos cumplidos ayer: [HABITOS]/7\n[IDEAS_BLOCK]\n\nRESPONDE CON ESTE FORMATO EXACTO (usa exactamente estos encabezados):\n\nMODO DEL DIA: [Ataque|Cierre|Contenido|Construccion|Recuperacion Tactica|Emergencia]\nRAZON: [1 sola linea, por que ese modo]\n\nPLAN DEL DIA:\n[horario completo desde despertar hasta dormir, con oracion+biblia primero, llamadas 08:40+, entrenamiento, comidas, contenido si aplica]\n\nDIAGNOSTICO BRUTAL:\n[que estas haciendo bien / que estas haciendo mal / donde pierdes dinero — maximo 6 lineas directas]\n\nSALUD PRIMAL HOY:\n[que comer, hidratacion, sol, control acne — 4 lineas concretas]\n\nSISTEMA DE CLIENTES:\n[que cliente priorizar hoy, accion exacta, donde esta el dinero mas rapido — 5 lineas]\n\nPROHIBIDO HOY:\n[lista de 4 cosas que no debes hacer]\n\nMETA MINIMA:\n[1 sola linea, la cosa mas importante del dia, no negociable]\n\nOPTIMIZACION PARA MANANA:\n[2 cambios concretos para manana]\n\nSe directo, estrategico, sin relleno. Maximo 400 palabras total. Espanol chileno.';
+
+function renderCoach(){
+  var now=new Date();
+  var ds=now.toLocaleDateString('es-CL',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('sfDate').textContent=hoy();
+  document.getElementById('sfDay').textContent=ds.split(',')[0];
+  var days=['domingo','lunes','martes','miercoles','jueves','viernes','sabado'];
+  document.getElementById('v5-dia').value=days[now.getDay()];
+
+  var qs=[
+    'No estoy cerrando — diagnostica por que y dame plan de recuperacion inmediato',
+    'Tengo un lead interesado pero no decide — como lo cierro hoy?',
+    'Hice 60 llamadas y nadie quiso escucharme — que cambia en el script?',
+    'Como estructuro el diagnostico de un cliente nuevo de clinica estetica?',
+    'Cuales son las 3 cosas que mas dinero me generan esta semana?',
+    'Cai en pornografia hoy — como reseteo y sigo ejecutando?',
+    'Dame el plan exacto para subir de $440 a $1.000 USD MRR en 30 dias',
+    'Como escalo de Chile a LATAM con Ulio AI?',
+  ];
+  document.getElementById('v5-quickbtns').innerHTML=qs.map(function(q){
+    return '<button class="btn sm" onclick="v5ConsultaQ(\''+q.replace(/'/g,'').replace(/"/g,'')+'\')">'+q+'</button>';
+  }).join('');
+}
+
+function v5Reset(){
+  document.getElementById('v5-modoBox').style.display='none';
+  document.getElementById('v5-resultado').style.display='none';
+  document.getElementById('v5-consultaResp').innerHTML='';
+  toast('Sistema reseteado');
+}
+
+async function v5Ejecutar(){
+  if(!getKey())return;
+  var v={
+    dia:document.getElementById('v5-dia').value||'lunes',
+    energia:document.getElementById('v5-energia').value||'7',
+    sueno:document.getElementById('v5-sueno').value||'7',
+    llamadas:document.getElementById('v5-llamadas').value||'0',
+    cierres:document.getElementById('v5-cierres').value||'0',
+    demos:document.getElementById('v5-demos').value||'0',
+    leads:document.getElementById('v5-leads').value||'0',
+    reels:document.getElementById('v5-reels').value||'0',
+    habitos:document.getElementById('v5-habitos').value||'5',
+    ideas:document.getElementById('v5-ideas').value.trim(),
+  };
+
+  // Modo local instantáneo
+  var modo=v5ModoLocal(v);
+  document.getElementById('v5-modoBox').style.display='block';
+  document.getElementById('v5-modotitulo').textContent=modo.titulo;
+  document.getElementById('v5-modosub').textContent=modo.razon;
+  document.getElementById('v5-resultado').style.display='block';
+
+  var loadMsg='<div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--gr);padding:8px 0"><div class="spin"></div>Procesando...</div>';
+  ['v5-plan','v5-prohibido','v5-meta','v5-diagnostico','v5-salud','v5-clientes','v5-optimizacion'].forEach(function(id){
+    document.getElementById(id).innerHTML=loadMsg;
+  });
+
+  var days=DB.days;
+  var tM=days.reduce(function(a,b){return a+(b.money||0)},0);
+  var tC=days.reduce(function(a,b){return a+(b.calls||0)},0);
+  var tCl=days.reduce(function(a,b){return a+(b.closes||0)},0);
+  var cliActivos=DB.clientes.filter(function(c){return c.estado==='cerrado'||c.estado==='activo'}).length;
+  var cliInfo=DB.clientes.map(function(c){return c.nombre+'('+c.estado+' $'+Math.round(c.ticket/1000)+'k)'}).join(', ');
+
+  var prompt=V5_PROMPT_MASTER
+    .replace('[DINERO]',fmt(tM))
+    .replace('[LLAMADAS_TOT]',tC)
+    .replace('[CIERRES_TOT]',tCl)
+    .replace('[CLI_ACTIVOS]',cliActivos+' — '+cliInfo)
+    .replace('[DIA]',v.dia)
+    .replace('[ENERGIA]',v.energia)
+    .replace('[SUENO]',v.sueno)
+    .replace('[LLAMADAS_AYER]',v.llamadas)
+    .replace('[CIERRES_3D]',v.cierres)
+    .replace('[DEMOS]',v.demos)
+    .replace('[LEADS_SIN]',v.leads)
+    .replace('[REELS]',v.reels)
+    .replace('[HABITOS]',v.habitos)
+    .replace('[IDEAS_BLOCK]',v.ideas?'MIS IDEAS HOY: '+v.ideas:'');
+
+  try{
+    var r=await claudeCall(prompt,1100);
+
+    // Parse each section
+    function extract(text,start,end){
+      var si=text.indexOf(start);
+      if(si===-1)return '';
+      si+=start.length;
+      var ei=end?text.indexOf(end,si):-1;
+      return (ei===-1?text.slice(si):text.slice(si,ei)).trim();
+    }
+
+    var plan=extract(r,'PLAN DEL DIA:','DIAGNOSTICO BRUTAL:');
+    var diag=extract(r,'DIAGNOSTICO BRUTAL:','SALUD PRIMAL HOY:');
+    var salud=extract(r,'SALUD PRIMAL HOY:','SISTEMA DE CLIENTES:');
+    var cli=extract(r,'SISTEMA DE CLIENTES:','PROHIBIDO HOY:');
+    var proh=extract(r,'PROHIBIDO HOY:','META MINIMA:');
+    var meta=extract(r,'META MINIMA:','OPTIMIZACION PARA MANANA:');
+    var optim=extract(r,'OPTIMIZACION PARA MANANA:','');
+
+    document.getElementById('v5-plan').textContent=plan||r;
+    document.getElementById('v5-diagnostico').textContent=diag||'Ver plan completo';
+    document.getElementById('v5-salud').textContent=salud||'Ver plan completo';
+    document.getElementById('v5-clientes').textContent=cli||'Ver plan completo';
+    document.getElementById('v5-meta').textContent=meta||'Ver plan completo';
+    document.getElementById('v5-optimizacion').textContent=optim||'Ver plan completo';
+
+    // Prohibido como lista visual
+    if(proh){
+      document.getElementById('v5-prohibido').innerHTML=proh.split('\n').filter(Boolean).map(function(line){
+        return '<div style="display:flex;gap:7px;padding:4px 0;font-size:13px;color:var(--rd)"><span style="font-weight:800;flex-shrink:0">✕</span>'+line.replace(/^[-•*\d.]+\s*/,'')+'</div>';
+      }).join('');
+    }
+
+    toast('Sistema V5 ejecutado');
+  }catch(e){
+    document.getElementById('v5-plan').innerHTML='<div style="color:var(--rd);font-size:13px">Error: '+e.message+'</div>';
+    ['v5-prohibido','v5-meta','v5-diagnostico','v5-salud','v5-clientes','v5-optimizacion'].forEach(function(id){
+      document.getElementById(id).innerHTML='';
+    });
+  }
+}
+
+function v5ModoLocal(v){
+  var dia=v.dia,en=parseInt(v.energia)||7,cl=parseInt(v.cierres)||0,ll=parseInt(v.llamadas)||0,dem=parseInt(v.demos)||0,ld=parseInt(v.leads)||0,sue=parseInt(v.sueno)||7;
+  if(dia==='sabado')return{titulo:'Contenido / Autoridad',razon:'Sabado: construyes audiencia para que los lunes lleguen leads precalentados. Meta: 3 reels + preparar prospectos.'};
+  if(dia==='domingo')return{titulo:'Planificacion',razon:'Domingo: el que planifica el domingo gana el lunes. Lista de prospectos, script revisado, meta de la semana clara.'};
+  if(cl===0&&ll<30)return{titulo:'EMERGENCIA',razon:'Cero cierres + pocas llamadas. El sistema detecta caida. Reset inmediato — 100 llamadas hoy, nada mas.'};
+  if(en<=4||sue<5)return{titulo:'Recuperacion Tactica',razon:'Cuerpo y mente bajo minimo. Hoy mantienes racha sin quemarte: 40 llamadas, seguimiento simple, dormir temprano.'};
+  if(cl===0&&ll<60)return{titulo:'Emergencia — Sin cierres',razon:'3 dias sin cerrar activa protocolo: revisar script, seguir a todos los interesados, priorizar demos sobre prospeccion nueva.'};
+  if(dem>0||ld>5)return{titulo:'Cierre',razon:'Tienes demos o '+(ld>5?ld+' leads sin seguir':'demos agendadas')+'. Hoy no prospectas — hoy conviertes lo que ya existe.'};
+  return{titulo:'Ataque',razon:'Todo en orden. Prospección pura: 08:40 arrancan las llamadas. Sin negociacion.'};
+}
+
+async function v5Consulta(){
+  if(!getKey())return;
+  var msg=document.getElementById('v5-consulta').value.trim();
+  if(!msg){toast('Escribe tu consulta');return;}
+  document.getElementById('v5-consultaResp').innerHTML='<div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--gr)"><div class="spin"></div>Sistema procesando...</div>';
+  var days=DB.days;
+  var tM=days.reduce(function(a,b){return a+(b.money||0)},0);
+  var tC=days.reduce(function(a,b){return a+(b.calls||0)},0);
+  var tCl=days.reduce(function(a,b){return a+(b.closes||0)},0);
+  var cliInfo=DB.clientes.map(function(c){return c.nombre+' ('+c.estado+', '+fmt(c.ticket)+')'}).join(' | ');
+  var prompt='Eres un sistema operativo de negocio y vida. Espanol chileno. Directo y especifico, sin relleno.\n\nDATA: Dinero generado: '+fmt(tM)+' | Llamadas: '+tC+' | Cierres: '+tCl+'\nClientes: '+cliInfo+'\nMeta: $1.000.000 CLP en 30 dias\n\nCONSULTA: '+msg+'\n\nResponde en maximo 200 palabras. Especifico y accionable.';
+  try{
+    var r=await claudeCall(prompt,600);
+    document.getElementById('v5-consultaResp').innerHTML='<div style="background:var(--bg);border-radius:9px;padding:13px 15px;border-left:3px solid var(--am);font-size:13px;color:var(--bk2);line-height:1.75;white-space:pre-wrap">'+r+'</div>';
+  }catch(e){
+    document.getElementById('v5-consultaResp').innerHTML='<div style="color:var(--rd);font-size:13px">Error: '+e.message+'</div>';
+  }
+}
+
+function v5ConsultaQ(q){
+  document.getElementById('v5-consulta').value=q;
+  v5Consulta();
+}
+
+// Keep stubs for backward compat
+function renderCoach2(){}
+function askCoach(){v5Consulta();}
+function askCoachQ(q){v5ConsultaQ(q);}
+function newCoachMsg(){v5Reset();}
+
+// ── MISIONES ──────────────────────────────────────────────────
+function renderMisiones(){
+  if(!DB.misiones)DB.misiones=[];
+  var done=DB.misiones.filter(function(m){return m.done}).length;
+  var total=DB.misiones.length||1;
+  var p=Math.round(done/total*100);
+
+  document.getElementById('misionMotiv').innerHTML=
+    '<div class="coach-box" style="margin-bottom:16px">'+
+    '<div class="coach-label">Esta semana es diferente</div>'+
+    '<div class="coach-msg">No eres un empleado que espera el fin de semana. Eres el dueno de tu tiempo y el arquitecto de tu legado. Tu familia sale de la pobreza porque tu decides ejecutar estas misiones sin importar como te sientas.</div>'+
+    '<div class="coach-sub">Cada mision completada es un millon de pesos mas cerca. Cada mision fallada es un dia mas en el mismo lugar.</div>'+
+    '</div>';
+
+  document.getElementById('misionProg').innerHTML=
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+    '<span style="font-size:13px;font-weight:600">'+done+' de '+DB.misiones.length+' misiones</span>'+
+    '<span style="font-size:24px;font-weight:800;color:'+(p===100?'var(--gndk)':p>=60?'var(--am)':'var(--rd)')+'">'+p+'%</span>'+
+    '</div>'+
+    '<div style="height:8px;background:var(--bg2);border-radius:4px;overflow:hidden">'+
+    '<div style="height:100%;width:'+p+'%;background:'+(p===100?'var(--gn)':p>=60?'var(--am)':'var(--rd)')+';border-radius:4px;transition:width .5s"></div>'+
+    '</div>';
+
+  var tipoBg={ventas:'var(--gnbg)',disciplina:'var(--ambg)',cuerpo:'var(--blbg)',dinero:'var(--rdbg)'};
+  var tipoC={ventas:'var(--gndk)',disciplina:'#8B5000',cuerpo:'var(--bl)',dinero:'#B00000'};
+  var tipoL={ventas:'Ventas',disciplina:'Disciplina',cuerpo:'Cuerpo',dinero:'Dinero'};
+
+  document.getElementById('misionCards').innerHTML=DB.misiones.map(function(m,i){
+    return '<div class="mc2'+(m.done?' done':'')+'">'+
+      '<div class="mc2-row">'+
+      '<div class="mc2-chk'+(m.done?' on':'')+'" onclick="toggleM('+i+')">'+( m.done?'v':'')+' </div>'+
+      '<div style="flex:1">'+
+      '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">'+
+      '<span class="mc2-title">'+m.titulo+'</span>'+
+      '<span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:'+(tipoBg[m.tipo]||'var(--bg2)')+';color:'+(tipoC[m.tipo]||'var(--gr)')+'">'+( tipoL[m.tipo]||m.tipo)+'</span>'+
+      '</div>'+
+      '<div class="mc2-desc">'+m.desc+'</div>'+
+      '</div>'+
+      '</div>'+
+      '</div>';
+  }).join('')+(done===DB.misiones.length&&DB.misiones.length>0?
+    '<div style="background:var(--gnbg);border:1px solid #AAECC4;border-radius:10px;padding:16px;text-align:center;margin-top:4px">'+
+    '<div style="font-size:20px;margin-bottom:6px">Semana completada al 100%</div>'+
+    '<div style="font-size:14px;font-weight:700;color:var(--gndk)">Esto es lo que separa a los que llegan de los que solo suenan.</div>'+
+    '</div>':'');
+}
+
+function toggleM(i){
+  if(!DB.misiones[i])return;
+  DB.misiones[i].done=!DB.misiones[i].done;
+  saveDB();renderMisiones();
+}
+
+async function misionsAI(){
+  if(!getKey())return;
+  go('misiones');
+  var ctx=document.getElementById('misionCtx')?document.getElementById('misionCtx').value.trim():'';
+  var days=DB.days;
+  var tM=days.reduce(function(a,b){return a+(b.money||0)},0);
+  var tC=days.reduce(function(a,b){return a+(b.calls||0)},0);
+  var tCl=days.reduce(function(a,b){return a+(b.closes||0)},0);
+
+  document.getElementById('misionMotiv').innerHTML=
+    '<div class="coach-box" style="margin-bottom:16px">'+
+    '<div class="coach-label">Generando misiones...</div>'+
+    '<div style="display:flex;align-items:center;gap:9px;color:#AAAAAA;font-size:13px"><div class="spin"></div>Analizando tu semana y construyendo misiones exactas para ti...</div>'+
+    '</div>';
+
+  var prompt='Eres un coach de ventas extremadamente directo que habla en espanol chileno. Mentalidad de Jordan Belfort + alguien que salio de la pobreza construyendo un empire.\n\nDATA REAL (Mateo, 18 anos, Chile, vende landing pages + IA a clinicas esteticas via cold calling):\nDinero generado: '+fmt(tM)+'\nLlamadas totales: '+tC+'\nCierres: '+tCl+'\nMeta: $1.000.000 CLP en 30 dias\n'+(ctx?'Contexto de esta semana: '+ctx+'\n':'')+'\n1. MENSAJE MOTIVADOR PERSONAL (4-5 lineas): Habla directo. Menciona que tiene 18 anos, que cambia el legado de su familia, que esto es la unica opcion real. Brutal y verdadero.\n\n2. 5 MISIONES para esta semana basadas en sus numeros reales. Termina con exactamente:\n---JSON---\n{"m":[{"t":"titulo corto","d":"descripcion de 1 linea concreta","tp":"ventas|disciplina|cuerpo|dinero"}]}\n\nEl JSON despues de ---JSON--- solamente.';
+
+  try{
+    var r=await claudeCall(prompt,900);
+    var parts=r.split('---JSON---');
+    var motiv=parts[0].trim();
+    var jsonPart=parts[1]?parts[1].trim():'';
+
+    document.getElementById('misionMotiv').innerHTML=
+      '<div class="coach-box" style="margin-bottom:16px">'+
+      '<div class="coach-label">Tu coach esta semana</div>'+
+      '<div class="coach-msg">'+motiv+'</div>'+
+      '</div>';
+
+    if(jsonPart){
+      try{
+        var clean=jsonPart.replace(/```json|```/g,'').trim();
+        var parsed=JSON.parse(clean);
+        if(parsed.m&&parsed.m.length){
+          DB.misiones=parsed.m.map(function(m,i){return{titulo:m.t,desc:m.d,tipo:m.tp||'ventas',done:false}});
+          saveDB();
+        }
+      }catch(e){}
+    }
+    renderMisiones();
+    toast('Misiones generadas para esta semana');
+  }catch(e){
+    document.getElementById('misionMotiv').innerHTML='<div style="color:var(--rd);font-size:13px;padding:12px">Error: '+e.message+'</div>';
+  }
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────
+function renderDash(){
+  var now=new Date();
+  var ds=now.toLocaleDateString('es-CL',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('dashDate').textContent=ds;
+  document.getElementById('sfDate').textContent=hoy();
+  document.getElementById('sfDay').textContent=ds.split(',')[0];
+  var days=DB.days,META=1000000;
+  var tM=days.reduce(function(a,b){return a+(b.money||0)},0);
+  var tC=days.reduce(function(a,b){return a+(b.calls||0)},0);
+  var tCl=days.reduce(function(a,b){return a+(b.closes||0)},0);
+  var n=days.length||1,p=pct(tM,META),diario=Math.round((META-tM)/Math.max(1,30-n));
+  var conv=tC>0?((tCl/tC)*100).toFixed(1):'0.0';
+  document.getElementById('sidePct').textContent=p+'%';
+  document.getElementById('sideBar').style.width=p+'%';
+  document.getElementById('sideAmt').textContent=fmt(tM)+' / $1.000.000';
+  document.getElementById('dayBdg').textContent='Dia '+(days.length||1)+' de 30';
+  document.getElementById('gbAmt').textContent=fmt(tM);
+  document.getElementById('gbFill').style.width=p+'%';
+  document.getElementById('gbPct').textContent=p+'% completado';
+  document.getElementById('gbRem').textContent=fmt(Math.max(0,META-tM))+' restante';
+  document.getElementById('gbDia').textContent=fmt(diario)+'/dia';
+  document.getElementById('dashM').innerHTML=[
+    {l:'Generado',v:fmt(tM),s:'de $1.000.000',c:'mg'},
+    {l:'Llamadas',v:tC.toLocaleString(),s:'en '+n+' dias',c:'mb'},
+    {l:'Cierres',v:tCl,s:'clientes pagados',c:''},
+    {l:'Conversion',v:conv+'%',s:'llamadas a cierres',c:''},
+    {l:'Promedio/dia',v:fmt(tM/n),s:'necesario: '+fmt(diario),c:'ma'},
+    {l:'Dias rest.',v:Math.max(0,30-n),s:'para cerrar',c:'mr'},
+  ].map(function(m){return '<div class="mc '+m.c+'"><div class="ml">'+m.l+'</div><div class="mv">'+m.v+'</div><div class="ms">'+m.s+'</div></div>'}).join('');
+  var td=days[days.length-1];
+  document.getElementById('tdLbl').textContent=hoy();
+  document.getElementById('tdSumm').innerHTML=td?[['Llamadas',td.calls,'var(--bl)'],['Interesados',td.interested||0,'var(--am)'],['Cierres',td.closes||0,'var(--gndk)'],['Dinero',fmt(td.money||0),'var(--gndk)']].map(function(x){return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:var(--bg);border-radius:7px;margin-bottom:5px"><span style="font-size:13px;color:var(--gr);font-weight:500">'+x[0]+'</span><span style="font-size:14px;font-weight:700;color:'+x[2]+'">'+x[1]+'</span></div>'}).join(''):'<div style="text-align:center;padding:20px;color:var(--gr2);font-size:13px">Sin registro hoy. <button class="btn sm" onclick="openM(\'newDay\')" style="margin-left:4px">Registrar</button></div>';
+  document.getElementById('actFd').innerHTML=[
+    {t:'Sistema activo',s:'CONQUISTA 30D operativo',c:'var(--gn)'},
+    {t:'Meta: $1.000.000 CLP',s:'30 dias cold calling',c:'var(--bl)'},
+    {t:DB.lls.filter(function(l){return l.estado==='pendiente'}).length+' llamadas hoy',s:'demos y seguimientos',c:'var(--am)'},
+    {t:DB.clientes.filter(function(c){return c.estado==='cerrado'}).length+' clientes cerrados',s:fmt(DB.clientes.filter(function(c){return c.estado==='cerrado'}).reduce(function(a,b){return a+(b.ticket||0)},0)),c:'var(--gn)'},
+  ].map(function(a){return '<div class="ai2"><div class="ad" style="background:'+a.c+'"></div><div><div class="at">'+a.t+'</div><div class="as">'+a.s+'</div></div></div>'}).join('');
+  var ritmo=n>1?tM/n:0;
+  document.getElementById('proyD').innerHTML=[
+    ['Ritmo actual',fmt(ritmo)+'/dia',pct(ritmo*30,META),'var(--bl)'],
+    ['Proyeccion 30 dias',fmt(ritmo*30),pct(ritmo*30,META),'var(--am)'],
+    ['Meta diaria',fmt(diario)+'/dia',100,'var(--gn)'],
+  ].map(function(x){return '<div class="pr"><span class="pl">'+x[0]+'</span><div class="pt2"><div class="pf" style="width:'+x[2]+'%;background:'+x[3]+'"></div></div><span class="pv" style="color:'+x[3]+';min-width:110px;font-size:12px">'+x[1]+'</span></div>'}).join('');
+}
+
+// ── TRACKER ──────────────────────────────────────────────────
+function renderTracker(){
+  var days=DB.days;
+  var tM=days.reduce(function(a,b){return a+(b.money||0)},0);
+  var tC=days.reduce(function(a,b){return a+(b.calls||0)},0);
+  var tCl=days.reduce(function(a,b){return a+(b.closes||0)},0);
+  document.getElementById('trackM').innerHTML=[{l:'Total generado',v:fmt(tM),c:'mg'},{l:'Llamadas',v:tC,c:'mb'},{l:'Cierres',v:tCl,c:''},{l:'Prom/dia',v:fmt(days.length?tM/days.length:0),c:'ma'}].map(function(m){return '<div class="mc '+m.c+'"><div class="ml">'+m.l+'</div><div class="mv">'+m.v+'</div></div>'}).join('');
+  document.getElementById('trackBody').innerHTML=days.length?days.map(function(d){
+    var cv=d.calls>0?((d.closes/d.calls)*100).toFixed(1):'0.0';
+    return '<tr><td><span class="bdg bk2">Dia '+d.num+'</span></td><td style="color:var(--gr);font-size:12px">'+d.fecha+'</td><td style="color:var(--bl);font-weight:600">'+(d.calls||0)+'</td><td>'+(d.interested||0)+'</td><td>'+(d.demos||0)+'</td><td style="color:var(--gndk);font-weight:700">'+(d.closes||0)+'</td><td style="color:var(--gndk);font-weight:700">'+fmt(d.money||0)+'</td><td><span class="bdg '+(parseFloat(cv)>=2?'bg':'bgr')+'">'+cv+'%</span></td><td><button class="btn sm" onclick="delDay('+d.id+')" style="color:var(--rd)">x</button></td></tr>';
+  }).join('')+'<tr style="background:var(--bg)"><td colspan="2" style="font-size:11px;font-weight:700;color:var(--gr)">TOTAL</td><td style="color:var(--bl);font-weight:700">'+tC+'</td><td>'+days.reduce(function(a,b){return a+(b.interested||0)},0)+'</td><td>'+days.reduce(function(a,b){return a+(b.demos||0)},0)+'</td><td style="color:var(--gndk);font-weight:700">'+tCl+'</td><td style="color:var(--gndk);font-weight:700">'+fmt(tM)+'</td><td></td><td></td></tr>':'<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--gr2)">Sin dias registrados aun</td></tr>';
+}
+function saveDay(){
+  DB.days.push({id:DB.lid++,num:parseInt(document.getElementById('d-n').value)||DB.days.length+1,fecha:document.getElementById('d-f').value||hoy(),calls:parseInt(document.getElementById('d-c').value)||0,interested:parseInt(document.getElementById('d-i').value)||0,demos:parseInt(document.getElementById('d-d').value)||0,closes:parseInt(document.getElementById('d-cl').value)||0,money:parseInt(document.getElementById('d-m').value)||0,notes:document.getElementById('d-nt').value.trim()});
+  saveDB();closeM('newDay');renderTracker();renderDash();toast('Dia registrado');
+}
+function delDay(id){DB.days=DB.days.filter(function(d){return d.id!==id});saveDB();renderTracker();renderDash();}
+
+// ── LLAMADAS ─────────────────────────────────────────────────
+function renderLlamadas(){
+  var ll=DB.lls;
+  var tb={fria:'bgr',demo:'bb',seguimiento:'ba',cierre:'bg'};
+  var tl={fria:'Frio',demo:'Demo',seguimiento:'Seguim.',cierre:'Cierre'};
+  var pend=ll.filter(function(l){return l.estado==='pendiente'}).length;
+  var done=ll.filter(function(l){return l.estado==='completada'}).length;
+  document.getElementById('callM').innerHTML=[{l:'Agendadas',v:ll.length,c:''},{l:'Pendientes',v:pend,c:'ma'},{l:'Completadas',v:done,c:'mg'},{l:'Tasa',v:ll.length?Math.round(done/ll.length*100)+'%':'0%',c:'mb'}].map(function(m){return '<div class="mc '+m.c+'"><div class="ml">'+m.l+'</div><div class="mv">'+m.v+'</div></div>'}).join('');
+  document.getElementById('callBody').innerHTML=ll.length?[].concat(ll).sort(function(a,b){return a.hora.localeCompare(b.hora)}).map(function(l){
+    return '<tr><td style="font-weight:700;color:var(--bl)">'+l.hora+'</td><td><div style="font-weight:600">'+l.nombre+'</div><div style="font-size:11px;color:var(--gr)">'+l.tel+'</div></td><td><span class="bdg '+(tb[l.tipo]||'bgr')+'">'+(tl[l.tipo]||l.tipo)+'</span></td><td style="font-size:12px;color:var(--bk2)">'+l.obj+'</td><td><span class="bdg '+(l.estado==='completada'?'bg':'ba')+'">'+l.estado+'</span></td><td><div style="display:flex;gap:4px">'+(l.estado==='pendiente'?'<button class="btn sm" onclick="doneLL('+l.id+')">ok</button>':'')+'<button class="btn sm" onclick="aiLL('+l.id+')" style="color:var(--am)">IA</button><button class="btn sm" onclick="delLL('+l.id+')" style="color:var(--rd)">x</button></div></td></tr>';
+  }).join(''):'<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--gr2)">Sin llamadas. Agrega tus demos de hoy.</td></tr>';
+}
+function saveLL(){
+  var n=document.getElementById('ll-n').value.trim();if(!n){toast('Escribe el nombre');return;}
+  DB.lls.push({id:DB.lid++,nombre:n,tel:document.getElementById('ll-t').value.trim(),hora:document.getElementById('ll-h').value||'09:00',tipo:document.getElementById('ll-tp').value,obj:document.getElementById('ll-o').value.trim(),ctx:document.getElementById('ll-c').value.trim(),estado:'pendiente'});
+  saveDB();closeM('newLL');renderLlamadas();toast('Llamada agendada');
+}
+function doneLL(id){var l=DB.lls.find(function(x){return x.id===id});if(l){l.estado='completada';saveDB();renderLlamadas();}}
+function delLL(id){DB.lls=DB.lls.filter(function(l){return l.id!==id});saveDB();renderLlamadas();}
+
+async function aiLL(id){
+  if(!getKey())return;
+  var l=DB.lls.find(function(x){return x.id===id});if(!l)return;
+  document.getElementById('aiPipeBox').style.display='block';
+  showAILoading('aiPipeContent','Analizando llamada con '+l.nombre+'...');
+  document.getElementById('p-llamadas').scrollTo({top:9999,behavior:'smooth'});
+  var prompt='Coach de ventas brutal para clinicas esteticas Chile. Espanol chileno directo.\n\nLLAMADA: '+l.tipo.toUpperCase()+' con '+l.nombre+'\nHora: '+l.hora+' | Objetivo: '+l.obj+'\nContexto: '+(l.ctx||'sin contexto')+'\n\n1. APERTURA EXACTA (primeros 10 segundos)\n2. ESTRATEGIA (3 pasos concretos)\n3. OBJECION mas probable y como manejarla\n4. COMO CERRAR esta llamada especifica\n\nMax 200 palabras. Muy especifico.';
+  try{var r=await claudeCall(prompt,600);showAIResult('aiPipeContent',r);}catch(e){showAIError('aiPipeContent',e.message);}
+}
+
+async function aiPipeline(){
+  if(!getKey())return;
+  document.getElementById('aiPipeBox').style.display='block';
+  showAILoading('aiPipeContent','Analizando todo el pipeline...');
+  document.getElementById('p-llamadas').scrollTo({top:9999,behavior:'smooth'});
+  var res=DB.lls.map(function(l){return l.hora+' | '+l.tipo.toUpperCase()+' | '+l.nombre+' | '+l.obj+' | '+(l.ctx||'')}).join('\n');
+  var cli=DB.clientes.map(function(c){return c.nombre+' ('+c.estado+') | '+fmt(c.ticket)+' | '+c.accion}).join('\n');
+  var prompt='Coach de ventas. Analiza el pipeline de este vendedor de landing pages para clinicas esteticas en Chile.\n\nLLAMADAS HOY:\n'+(res||'ninguna')+'\n\nPIPELINE:\n'+(cli||'vacio')+'\n\n1. PRIORIDAD DEL DIA (cual llamada primero y por que)\n2. QUE MEJORAR urgente\n3. ALERTA (algo que podria estar haciendo mal)\n\nMax 180 palabras. Brutal y directo.';
+  try{var r=await claudeCall(prompt,500);showAIResult('aiPipeContent',r);}catch(e){showAIError('aiPipeContent',e.message);}
+}
+
+// ── CLIENTES ─────────────────────────────────────────────────
+function filtC(f,btn){cFilt=f;document.querySelectorAll('#cliTabs .tab').forEach(function(b){b.classList.remove('on')});if(btn)btn.classList.add('on');renderClientes(f);}
+function renderClientes(f){
+  var list=f?DB.clientes.filter(function(c){return c.estado===f}):DB.clientes;
+  var cerr=DB.clientes.filter(function(c){return c.estado==='cerrado'});
+  var sB={lead:'bgr',interesado:'ba',demo:'bb',cerrado:'bg'};
+  var sL={lead:'Lead',interesado:'Interesado',demo:'Demo',cerrado:'Cerrado'};
+  document.getElementById('cliM').innerHTML=[{l:'Pipeline',v:DB.clientes.filter(function(c){return c.estado!=='cerrado'}).length,c:'mb'},{l:'Cerrados',v:cerr.length,c:'mg'},{l:'Ingresos',v:fmt(cerr.reduce(function(a,b){return a+(b.ticket||0)},0)),c:'mg'},{l:'Ticket prom.',v:fmt(cerr.length?cerr.reduce(function(a,b){return a+(b.ticket||0)},0)/cerr.length:0),c:'ma'}].map(function(m){return '<div class="mc '+m.c+'"><div class="ml">'+m.l+'</div><div class="mv">'+m.v+'</div></div>'}).join('');
+  document.getElementById('cliBody').innerHTML=list.map(function(c){return '<tr><td><div style="font-weight:600">'+c.nombre+'</div><div style="font-size:11px;color:var(--gr)">'+c.tel+'</div></td><td style="font-size:12px;color:var(--gr)">'+c.nicho+'</td><td style="font-weight:700;color:var(--gndk)">'+fmt(c.ticket)+'</td><td><span class="bdg '+(sB[c.estado]||'bgr')+'">'+(sL[c.estado]||c.estado)+'</span></td><td style="font-size:12px;color:var(--bk2)">'+c.accion+'</td><td><div style="display:flex;gap:4px"><button class="btn sm" onclick="advC('+c.id+')">avanzar</button><button class="btn sm" onclick="delC('+c.id+')" style="color:var(--rd)">x</button></div></td></tr>';}).join('')||'<tr><td colspan="6" style="text-align:center;padding:26px;color:var(--gr2)">Sin clientes aqui</td></tr>';
+}
+function saveC(){var n=document.getElementById('c-n').value.trim();if(!n){toast('Escribe el nombre');return;}DB.clientes.push({id:DB.cid++,nombre:n,nicho:document.getElementById('c-ni').value,ticket:parseInt(document.getElementById('c-t').value)||0,estado:document.getElementById('c-e').value,accion:document.getElementById('c-a').value.trim(),tel:document.getElementById('c-tel').value.trim(),notas:document.getElementById('c-no').value.trim()});saveDB();closeM('newC');renderClientes(cFilt);toast('Cliente guardado');}
+function delC(id){DB.clientes=DB.clientes.filter(function(c){return c.id!==id});saveDB();renderClientes(cFilt);}
+function advC(id){var flow=['lead','interesado','demo','cerrado'];var c=DB.clientes.find(function(x){return x.id===id});if(!c)return;var i=flow.indexOf(c.estado);if(i<flow.length-1){c.estado=flow[i+1];saveDB();renderClientes(cFilt);renderDash();toast('Avanzado a: '+c.estado);}else{toast('Ya esta cerrado');}}
+
+async function aiClientes(){
+  if(!getKey())return;
+  document.getElementById('aiCliBox').style.display='block';
+  showAILoading('aiCliContent','Analizando cada cliente...');
+  document.getElementById('p-clientes').scrollTo({top:9999,behavior:'smooth'});
+  var cli=DB.clientes.map(function(c){return 'CLIENTE: '+c.nombre+'\nEstado: '+c.estado+' | Ticket: '+fmt(c.ticket)+'\nAccion pendiente: '+c.accion+'\nNotas: '+(c.notas||'sin notas')}).join('\n\n');
+  var prompt='Experto en ventas clinicas esteticas Chile. Analiza cada cliente.\n\n'+(cli||'Sin clientes')+'\n\nPara CADA cliente:\n- QUE HACER HOY (1 accion concreta)\n- PROB. DE CIERRE (%)\n- RIESGO principal\n\nAl final: TOP 3 en los que enfocarse hoy. Max 250 palabras.';
+  try{var r=await claudeCall(prompt,700);showAIResult('aiCliContent',r);}catch(e){showAIError('aiCliContent',e.message);}
+}
+
+// ── SCRIPT ───────────────────────────────────────────────────
+function renderScript(){
+  document.getElementById('ofertaL').innerHTML=['Landing page optimizada para conversion','Boton WhatsApp directo con mensaje predefinido','Diseno enfocado en agendar citas','Dominio + 4 correos corporativos','Lista en 7 dias, sin mensualidades'].map(function(i){return '<div style="display:flex;gap:7px;font-size:13px;align-items:center;padding:3px 0"><span style="color:var(--gn);font-weight:700">+</span>'+i+'</div>'}).join('');
+  document.getElementById('precioL').innerHTML=[['Basico','$70.000','Clinica pequena, 1 profesional, sin web','bgr'],['Estandar','$100-150k','Clinica mediana, 2-3 sedes, redes activas','ba'],['Premium','$200-380k','Clinica grande, multiples servicios','bg']].map(function(x){return '<div style="padding:10px 0;border-bottom:1px solid var(--bd);display:flex;gap:11px;align-items:flex-start"><div style="flex:1"><div style="font-size:13px;font-weight:700">'+x[0]+'</div><div style="font-size:11px;color:var(--gr);margin-top:1px">'+x[2]+'</div></div><span class="bdg '+x[3]+'">'+x[1]+'</span></div>'}).join('');
+  document.getElementById('scriptL').innerHTML=[
+    ['Apertura — 10 segundos','','Hola, te hablo rapido. Soy Mateo, trabajo con clinicas esteticas en Chile. Vi tu negocio y tengo algo que podria traerte mas citas por WhatsApp esta misma semana. Tienes 2 minutos?'],
+    ['Calificacion','sa','Como te llegan los clientes actualmente? Tienen pagina web o solo redes?\n→ Sin web = oportunidad alta · Sin WhatsApp directo = tambien'],
+    ['El problema','','Cuando alguien te busca en Google y no encuentra pagina con boton WhatsApp directo, llama a la competencia. Te estas perdiendo clientes sin darte cuenta.'],
+    ['Propuesta','sg','Creo una pagina optimizada para que cuando alguien te busque, te escriba directo. Lista en 7 dias, sin mensualidades. Es tuya para siempre.'],
+    ['Precio','sa','La inversion es [precio segun perfil]. Si esto te trae 3-5 clientes nuevos en el mes, se paga solo. Te muestro como quedaria para tu clinica?'],
+    ['Objecion: Ya tenemos pagina','sr','Tienen boton de WhatsApp directo y esta optimizada para celular? La mayoria no. Eso es lo que marca la diferencia.'],
+    ['Objecion: Lo voy a pensar','sr','Si esto te trae 5 clientes este mes, valio la pena? Te agendo 15 min para mostrarte un ejemplo real.'],
+    ['Objecion: Muy caro','sr','Cuanto te vale un cliente nuevo? Si es mas de [precio/5], esto se paga con el primer cliente.'],
+    ['Cierre','sg','Cuando tienes 15 minutos para que te muestre como quedaria para [nombre]? Lo hago hoy mismo.'],
+  ].map(function(x){return '<div class="sb2 '+x[1]+'"><div class="sl">'+x[0]+'</div><div class="st">'+x[2].replace(/\n/g,'<br>')+'</div></div>'}).join('');
+  document.getElementById('ticketL').innerHTML=[['Ticket Bajo $70k','Clinica pequena, sin web, barrio','Mencionar inversion unica sin mensualidades'],['Ticket Medio $100-150k','2-3 sedes, redes activas','Mencionar conversion desde Google y citas nuevas'],['Ticket Alto $200-380k','Nombre conocido, varias sedes','Mencionar competencia, posicionamiento, imagen']].map(function(x){return '<div style="background:var(--bg);border-radius:8px;padding:12px"><div style="font-size:13px;font-weight:700;margin-bottom:4px">'+x[0]+'</div><div style="font-size:11px;color:var(--gr);margin-bottom:7px">'+x[1]+'</div><div style="font-size:12px;line-height:1.5"><strong>Copy:</strong> '+x[2]+'</div></div>'}).join('');
+}
+
+// ── FINANZAS ─────────────────────────────────────────────────
+var INVS=[{n:'Claude Pro',m:23750,i:'robot'},{n:'Canva Pro',m:12350,i:'paint'},{n:'Ulio AI',m:28500,i:'phone'},{n:'Anthropic API',m:0,i:'bolt'}];
+function renderFinanzas(){
+  var txs=DB.txs;
+  var ing=txs.filter(function(t){return t.tipo==='in'}).reduce(function(a,b){return a+b.monto},0);
+  var gas=txs.filter(function(t){return t.tipo==='out'}).reduce(function(a,b){return a+b.monto},0);
+  var inv=INVS.reduce(function(a,b){return a+b.m},0);
+  var neto=ing-gas-inv;
+  document.getElementById('finM').innerHTML=[{l:'Ingresos',v:fmt(ing),c:'mg'},{l:'Gastos',v:fmt(gas),c:'mr'},{l:'Inversiones',v:fmt(inv),c:'ma'},{l:'Neto',v:fmt(Math.max(0,neto)),c:neto>=0?'mg':'mr'}].map(function(m){return '<div class="mc '+m.c+'"><div class="ml">'+m.l+'</div><div class="mv">'+m.v+'</div></div>'}).join('');
+  var icons={robot:'🤖',paint:'🎨',phone:'📞',bolt:'⚡'};
+  document.getElementById('invL').innerHTML=INVS.map(function(x){return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)"><span style="font-size:18px">'+icons[x.i]+'</span><span style="font-size:13px;font-weight:600;flex:1">'+x.n+'</span><span style="font-size:13px;font-weight:700;color:var(--am)">'+(x.m>0?fmt(x.m):'Variable')+'</span></div>'}).join('');
+  var p=ing>0?Math.round(neto/ing*100):0;
+  document.getElementById('margenB').innerHTML='<div style="background:var(--bg);border-radius:8px;padding:13px;text-align:center;margin-bottom:11px"><div style="font-size:11px;font-weight:600;color:var(--gr);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Margen neto</div><div style="font-size:26px;font-weight:800;color:'+(neto>=0?'var(--gndk)':'var(--rd)')+'">'+fmt(neto)+'</div><div style="font-size:12px;color:var(--gr);margin-top:2px">'+p+'% sobre ingresos</div></div>'+[['Ingresos',ing,'var(--gn)',ing],['Inversiones',inv,'var(--am)',ing],['Neto',Math.max(0,neto),'var(--gndk)',ing]].map(function(x){return '<div class="pr"><span class="pl">'+x[0]+'</span><div class="pt2"><div class="pf" style="width:'+(x[3]?pct(x[1],x[3]):0)+'%;background:'+x[2]+'"></div></div><span class="pv" style="color:'+x[2]+';min-width:75px;font-size:12px">'+fmt(x[1])+'</span></div>'}).join('');
+  document.getElementById('txBody').innerHTML=[].concat(DB.txs).reverse().map(function(t){var ic={in:'💰',out:'💸',inv:'📈'}[t.tipo];var bc={in:'bg',out:'br',inv:'ba'}[t.tipo];var sg={in:'+',out:'-',inv:'~'}[t.tipo];var vc={in:'var(--gndk)',out:'var(--rd)',inv:'var(--am)'}[t.tipo];return '<tr><td style="font-weight:600">'+ic+' '+t.desc+'</td><td><span class="bdg '+bc+'">'+{in:'Ingreso',out:'Gasto',inv:'Inversion'}[t.tipo]+'</span></td><td style="font-weight:700;color:'+vc+'">'+sg+fmt(t.monto)+'</td><td style="color:var(--gr);font-size:12px">'+t.cat+'</td><td style="color:var(--gr);font-size:12px">'+t.fecha+'</td></tr>';}).join('');
+}
+function saveTx(){var d=document.getElementById('t-d').value.trim();if(!d){toast('Escribe descripcion');return;}DB.txs.push({id:DB.tid++,desc:d,tipo:document.getElementById('t-t').value,monto:parseInt(document.getElementById('t-m').value)||0,cat:document.getElementById('t-c').value,fecha:hoy()});saveDB();closeM('newTx');renderFinanzas();toast('Registrado');}
+
+// ── PROYECCION ───────────────────────────────────────────────
+function renderProyeccion(){
+  var data=[
+    {mes:'Mes 1',cli:2,precio:'$150',ing:'$300',meta:'$1.000',est:'Chile — validacion. Primeros 2 cierres sin importar el precio',prog:3},
+    {mes:'Mes 2',cli:5,precio:'$180',ing:'$900',meta:'$1.000',est:'Chile — subir precio. Conseguir testimonios reales',prog:9},
+    {mes:'Mes 3',cli:8,precio:'$200',ing:'$1.600',meta:'$1.500',est:'Chile + expansion LATAM (Mexico/Colombia)',prog:16},
+    {mes:'Mes 4',cli:12,precio:'$220',ing:'$2.640',meta:'$2.500',est:'LATAM — volumen. Meta Ads activo con $10/dia',prog:26},
+    {mes:'Mes 5',cli:16,precio:'$250',ing:'$4.000',meta:'$3.500',est:'Primer cliente Espana. Ajustar pitch',prog:40},
+    {mes:'Mes 6',cli:20,precio:'$280',ing:'$5.600',meta:'$5.000',est:'Espana + automatizar onboarding',prog:56},
+    {mes:'Mes 7',cli:25,precio:'$300',ing:'$7.500',meta:'$7.000',est:'Contratar 1 closer para demos',prog:75},
+    {mes:'Mes 8',cli:30,precio:'$350',ing:'$10.500',meta:'$10.000',est:'USA primeros clientes. Pitch en ingles',prog:100},
+  ];
+  var colors=['var(--bl)','var(--bl)','var(--am)','var(--am)','var(--gn)','var(--gn)','var(--gndk)','var(--gndk)'];
+  document.getElementById('projTable').innerHTML=data.map(function(d,i){
+    return '<div class="pf-row">'+
+      '<span class="pf-mes">'+d.mes+'</span>'+
+      '<div class="pf-bar-wrap">'+
+      '<div class="pf-bar-track"><div class="pf-bar-fill" style="width:'+d.prog+'%;background:'+colors[i]+'"></div></div>'+
+      '<div class="pf-label">'+d.cli+' clientes · '+d.precio+'/mes · Meta: '+d.meta+' USD</div>'+
+      '<div style="font-size:11px;color:var(--gr2);margin-top:1px">'+d.est+'</div>'+
+      '</div>'+
+      '<div class="pf-val" style="color:'+colors[i]+'">'+d.ing+'</div>'+
+      '</div>';
+  }).join('');
+}
+
+// ── RUTINA ULIO ──────────────────────────────────────────────
+function renderRutina(){
+  document.getElementById('rutinaStats').innerHTML=[
+    {l:'Ventas y demos',v:'5.5h',s:'llamadas + seguimiento',c:'mg'},
+    {l:'Cuerpo',v:'2.5h',s:'entreno + comidas',c:'mb'},
+    {l:'Aprendizaje',v:'1.75h',s:'Ulio + ventas + Meta',c:'ma'},
+    {l:'Sueno',v:'7h',s:'el superpoder #1',c:''},
+  ].map(function(m){return '<div class="mc '+m.c+'"><div class="ml">'+m.l+'</div><div class="mv">'+m.v+'</div><div class="ms">'+m.s+'</div></div>'}).join('');
+
+  var rutina=[
+    ['04:30','Despertar','Sin telefono 5 min. Agua + respiracion.','mind'],
+    ['04:45','Activacion','Ducha fria o musica energizante. Espacio de trabajo listo.','mind'],
+    ['05:00','Aprendizaje 1','Estudia Ulio AI: agentes, demos, tutoriales.','learn'],
+    ['06:00','Preparacion','Revisa script, 3 metas del dia, 50 prospectos nuevos.','work'],
+    ['07:00','Bloque 1 — Llamadas','40-50 llamadas. Foco total. Sin interrupciones.','sales'],
+    ['08:30','Break activo','Anota aprendizajes. Ajusta script si algo no funciono.','rest'],
+    ['08:50','Bloque 2 — Llamadas','Segunda tanda. Seguimiento a interesados de ayer.','sales'],
+    ['10:20','Entrenamiento','1 hora gym, correr o calistenia. Sin excusas.','body'],
+    ['11:20','Nutricion','Proteina + carbohidratos. Sin distracciones al comer.','body'],
+    ['11:50','Demos y cierres','WhatsApp a interesados. Agenda demos. Presenta Sofia en vivo.','sales'],
+    ['13:20','Bloque 3 — Llamadas','Nuevas llamadas o mercado diferente (LATAM).','sales'],
+    ['14:20','Construccion','Configura agentes, personaliza prompts, crea plantillas.','work'],
+    ['15:20','Administracion','Llena tracker, actualiza pipeline, responde WhatsApp.','work'],
+    ['16:00','Aprendizaje 2','Meta Ads, copywriting, ventas. 1 video con aplicacion inmediata.','learn'],
+    ['16:45','Revision diaria','Cuantas llamadas? Cierres? Que cambio manana?','mind'],
+    ['17:00','Descompresion','Caminata, musica, tiempo libre. SIN hablar de trabajo.','rest'],
+    ['18:00','Cena','Proteina + menos carbohidratos. Sin pantallas.','body'],
+    ['18:45','Tiempo personal','Familia, amigos, hobbies. Lo que te recarga.','rest'],
+    ['20:00','Rutina nocturna','Ducha. Sin pantallas brillantes. Prepara para manana.','rest'],
+    ['20:30','Dormir','7 horas. Habitacion oscura. Sin telefono.','sleep'],
+  ];
+  var catC={sales:'var(--gn)',work:'var(--bl)',learn:'var(--am)',body:'var(--rd)',mind:'var(--am)',rest:'var(--gr)',sleep:'var(--gr2)'};
+  var catBg={sales:'var(--gnbg)',work:'var(--blbg)',learn:'var(--ambg)',body:'var(--rdbg)',mind:'var(--ambg)',rest:'var(--bg2)',sleep:'var(--bg2)'};
+  var catL={sales:'Ventas',work:'Sistema',learn:'Aprender',body:'Cuerpo',mind:'Mente',rest:'Descanso',sleep:'Sueno'};
+  document.getElementById('rutinaList').innerHTML=rutina.map(function(s){
+    return '<div class="sr2"><span class="st2">'+s[0]+'</span><div class="sb3"><div class="sn">'+s[1]+'</div><div class="sd">'+s[2]+'</div></div><span class="sc" style="background:'+catBg[s[3]]+';color:'+catC[s[3]]+'">'+catL[s[3]]+'</span></div>';
+  }).join('');
+}
+
+// ── PLAN 4 SEMANAS ────────────────────────────────────────────
+function renderPlan(){
+  var semanas=[
+    {t:'Semana 1 — Dominar Ulio AI',c:'var(--bl)',dias:[
+      ['Lun','Crear cuenta Ulio, explorar panel, conectar numero de telefono'],
+      ['Mar','Construir primer agente con prompt de Sofia (Downtown Dental)'],
+      ['Mie','Probar el agente: llamar al numero, escuchar respuesta, ajustar'],
+      ['Jue','Crear 2 variantes del agente para rubros distintos (salon, abogado)'],
+      ['Vie','5 demos simuladas con amigos o familia — recibir feedback'],
+      ['Sab','Corregir errores. Dejarlo 100% funcional y natural'],
+      ['Dom','Descanso activo: anotar dudas para semana 2'],
+    ]},
+    {t:'Semana 2 — Demo perfecta + Primeras llamadas',c:'var(--am)',dias:[
+      ['Lun','Practicar script de llamada 20 veces en voz alta. Grabarte y escucharte'],
+      ['Mar','Primeras 50 llamadas reales a clinicas dentales'],
+      ['Mie','Analizar: en que parte cuelgan? Ajustar script'],
+      ['Jue','Primera demo real por WhatsApp a un interesado'],
+      ['Vie','80 llamadas. Objetivo: 1 demo agendada minimo'],
+      ['Sab','Ver 2 videos de ventas consultivas. Aplicar 1 tecnica el lunes'],
+      ['Dom','Revisar pipeline. Que prospectos necesitan seguimiento?'],
+    ]},
+    {t:'Semana 3 — Cerrar primeros clientes',c:'var(--gn)',dias:[
+      ['Lun','100 llamadas. Foco en seguimiento a interesados de semana 2'],
+      ['Mar','Practicar cierre: "no te quiero vender por aqui, hoy o manana te muestro?"'],
+      ['Mie','Objetivo: cerrar primer cliente. Cualquier precio. El caso de exito vale oro'],
+      ['Jue','Configurar agente del primer cliente. Documentar el proceso paso a paso'],
+      ['Vie','Usar ese proceso como plantilla. Crear checklist de onboarding'],
+      ['Sab','Subir 1 reel a Instagram mostrando como funciona el agente'],
+      ['Dom','Calcular cuanto necesitas para llegar a $1K. Cuantos clientes mas?'],
+    ]},
+    {t:'Semana 4 — Escala + Meta Ads',c:'var(--rd)',dias:[
+      ['Lun','100+ llamadas. Mas volumen, mismo script optimizado'],
+      ['Mar','Crear primera campana Meta Ads: video corto del agente en accion'],
+      ['Mie','Segmentar: duenos de clinicas dentales, salones, consultorios'],
+      ['Jue','Presupuesto minimo: $5 USD/dia. Medir costo por lead'],
+      ['Vie','Combinar llamadas en frio + leads de Meta. Doble canal de entrada'],
+      ['Sab','Revisar metricas del mes: llamadas, demos, cierres, ingresos'],
+      ['Dom','Planificar mes 2: subir precios, nuevo nicho, nuevo mercado (LATAM)'],
+    ]},
+  ];
+  document.getElementById('planContainer').innerHTML=semanas.map(function(s){
+    return '<div class="card" style="border-left:3px solid '+s.c+'">'+
+      '<div class="ct" style="color:'+s.c+'">'+s.t+'</div>'+
+      s.dias.map(function(d){return '<div style="display:flex;gap:11px;padding:8px 0;border-bottom:1px solid #F5F5F3;align-items:flex-start"><span style="font-size:11px;font-weight:700;color:'+s.c+';min-width:28px;padding-top:1px">'+d[0]+'</span><span style="font-size:13px;color:var(--bk2)">'+d[1]+'</span></div>'}).join('')+
+      '</div>';
+  }).join('');
+}
+
+// ── DISCIPLINA ───────────────────────────────────────────────
+var HABITS=[{id:'h1',n:'Levantarse antes de 5:30am',s:'Sin snooze. Primera victoria del dia.',ic:'⏰'},{id:'h2',n:'Entrenamiento 1 hora',s:'Gym, correr o calistenia. Sin excusas.',ic:'💪'},{id:'h3',n:'80+ llamadas minimas',s:'El numero es el suelo, no el techo.',ic:'📞'},{id:'h4',n:'Alimentacion limpia',s:'Sin comida basura ni alcohol.',ic:'🥩'},{id:'h5',n:'No fap',s:'Energia y enfoque mental total.',ic:'🔒'},{id:'h6',n:'Sin redes en horario de trabajo',s:'5am — 7pm solo trabajo.',ic:'📵'},{id:'h7',n:'Tracker actualizado',s:'Numeros reales antes de dormir.',ic:'📝'},{id:'h8',n:'Revision diaria completada',s:'Que funciono? Que cambio manana?',ic:'🔁'}];
+function renderDisc(){
+  var k=hoy();if(!DB.habits[k])DB.habits[k]={};var ch=DB.habits[k];
+  var done=Object.values(ch).filter(Boolean).length;
+  document.getElementById('habDate').textContent=k;
+  document.getElementById('habList').innerHTML='<div style="background:var(--bg);border-radius:8px;padding:9px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600">'+done+' de '+HABITS.length+' completados</span><span style="font-size:22px;font-weight:800;color:'+(done===HABITS.length?'var(--gndk)':done>=6?'var(--am)':'var(--rd)')+'">'+Math.round(done/HABITS.length*100)+'%</span></div>'+HABITS.map(function(h){return '<div class="hi"><div class="hc'+(ch[h.id]?' on':'')+'" onclick="togH(\''+h.id+'\')">'+(ch[h.id]?'v':'')+'</div><span style="font-size:15px">'+h.ic+'</span><div style="flex:1"><div style="font-size:13px;font-weight:600">'+h.n+'</div><div style="font-size:11px;color:var(--gr)">'+h.s+'</div></div></div>'}).join('');
+  var logs=Object.entries(DB.habits).sort(function(a,b){return b[0].localeCompare(a[0])}).slice(0,7);
+  document.getElementById('rachaH').innerHTML=logs.length?logs.map(function(e){var d=Object.values(e[1]).filter(Boolean).length,p=Math.round(d/HABITS.length*100);return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)"><span style="font-size:12px;color:var(--gr);min-width:80px">'+e[0]+'</span><div style="flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+p+'%;background:'+(p===100?'var(--gn)':p>=70?'var(--am)':'var(--rd)')+';border-radius:3px"></div></div><span style="font-size:12px;font-weight:700;color:'+(p===100?'var(--gndk)':p>=70?'var(--am)':'var(--rd)')+';min-width:30px;text-align:right">'+p+'%</span></div>'}).join(''):'<div style="text-align:center;padding:16px;color:var(--gr2);font-size:12px">Sin historial aun</div>';
+}
+function togH(id){var k=hoy();if(!DB.habits[k])DB.habits[k]={};DB.habits[k][id]=!DB.habits[k][id];saveDB();renderDisc();}
+function saveDisc(){var k=hoy();if(!DB.discLogs)DB.discLogs={};DB.discLogs[k]={energia:document.getElementById('eLvl').value,mental:document.getElementById('eSt').value,mejora:document.getElementById('eMej').value};saveDB();toast('Registro guardado');}
+
+// ── META ADS ─────────────────────────────────────────────────
+function renderMetaAds(){
+  document.getElementById('metaFlujo').innerHTML=[
+    ['1','Claude en Chrome','Identifica marcas top en tu nicho y sus ads mas exitosos en Meta Ads Library'],
+    ['2','Copias los links','Claude copia los links de los mejores anuncios (no puede descargar imagenes directamente)'],
+    ['3','Descargas manualmente','Descargas las imagenes desde los links y las subes a Google Drive'],
+    ['4','Pletor importa','Pletor importa las imagenes desde Google Drive como inspiracion'],
+    ['5','Produccion masiva','Pletor genera 20+ variaciones de creativos basados en la inspiracion'],
+    ['6','Exportar y publicar','Los creativos se exportan a Drive y tu los subes a Meta Ads Manager'],
+  ].map(function(x){return '<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #F5F5F3;align-items:flex-start"><span style="width:22px;height:22px;background:var(--bk);color:var(--w);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">'+x[0]+'</span><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">'+x[1]+'</div><div style="font-size:12px;color:var(--gr);line-height:1.5">'+x[2]+'</div></div></div>'}).join('');
+  document.getElementById('metaConfig').innerHTML=[
+    ['Herramienta','Claude + Chrome + Pletor.ai'],
+    ['Presupuesto minimo','$5 USD/dia para empezar'],
+    ['Objetivo inicial','Costo por lead menor a $3 USD'],
+    ['Audiencia','Duenos de clinicas dentales y esteticas Chile'],
+    ['Formato recomendado','Video corto 15-30 seg mostrando el agente en accion'],
+    ['Cuando empezar','Semana 4 — cuando tengas 2+ clientes cerrados'],
+  ].map(function(x){return '<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #F5F5F3"><span style="font-size:11px;font-weight:600;color:var(--gr);min-width:120px;padding-top:1px">'+x[0]+'</span><span style="font-size:13px;color:var(--bk2);font-weight:500">'+x[1]+'</span></div>'}).join('');
+  document.getElementById('metaMetrics').innerHTML=[
+    ['CTR objetivo','Mayor a 2%','var(--gn)'],
+    ['CPL (Costo por lead)','Menor a $3 USD','var(--gn)'],
+    ['Tasa de cierre leads Meta','5-10% de leads pagados','var(--am)'],
+    ['ROAS objetivo','3x minimo (ganas $3 por cada $1 invertido)','var(--am)'],
+    ['Budget inicial','$5/dia = $150/mes = 50+ leads potenciales','var(--bl)'],
+  ].map(function(x){return '<div class="pr"><span class="pl">'+x[0]+'</span><span style="font-size:13px;font-weight:600;color:'+x[2]+'">'+x[1]+'</span></div>'}).join('');
+}
+
+// ── MODAL + TOAST ─────────────────────────────────────────────
+function openM(id){document.getElementById('m-'+id).classList.add('on');}
+function closeM(id){document.getElementById('m-'+id).classList.remove('on');}
+document.querySelectorAll('.mbg').forEach(function(m){m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('on')});});
+function toast(msg,dur){dur=dur||2500;document.getElementById('toastMsg').textContent=msg;var t=document.getElementById('toastEl');t.classList.add('on');setTimeout(function(){t.classList.remove('on')},dur);}
+
+// ── IA OPERATIVA V3 ───────────────────────────────────────────
+function renderOperativa(){
+  // Set today's day automatically
+  var days=['domingo','lunes','martes','miercoles','jueves','viernes','sabado'];
+  document.getElementById('v-dia').value=days[new Date().getDay()];
+}
+
+function getVars(){
+  return {
+    dia: document.getElementById('v-dia').value||'lunes',
+    energia: document.getElementById('v-energia').value||'7',
+    sueno: document.getElementById('v-sueno').value||'7',
+    llamadas: document.getElementById('v-llamadas').value||'0',
+    cierres: document.getElementById('v-cierres').value||'0',
+    demos: document.getElementById('v-demos').value||'0',
+    leads: document.getElementById('v-leads').value||'0',
+    reels: document.getElementById('v-reels').value||'0',
+    habitos: document.getElementById('v-habitos').value||'5',
+  };
+}
+
+// Motor de reglas local (sin IA) — decide el modo
+function decidirModoLocal(v){
+  var dia=v.dia, en=parseInt(v.energia), cl=parseInt(v.cierres), ll=parseInt(v.llamadas), dem=parseInt(v.demos), ld=parseInt(v.leads), re=parseInt(v.reels), hab=parseInt(v.habitos), sue=parseInt(v.sueno);
+  var esFindeS=dia==='sabado';var esDomingo=dia==='domingo';
+  if(dia==='sabado') return {modo:'Contenido / Autoridad', color:'var(--bl)', razon:'Es sábado. El mercado está más lento. Hoy construyes autoridad para que los lunes seas imparable.', proto:'finde'};
+  if(dia==='domingo') return {modo:'Planificación + Estrategia', color:'var(--am)', razon:'Domingo: preparas el lunes. Cada minuto aquí vale por 3 lunes improvisados.', proto:'finde'};
+  if(cl===0 && (new Date().getDay()>3) && ll<40) return {modo:'EMERGENCIA', color:'var(--rd)', razon:'Llevas días sin cerrar y pocas llamadas. Esto no se arregla pensando — se arregla llamando.', proto:'no_cierro'};
+  if(en<=4||sue<=5) return {modo:'Recuperación Táctica', color:'var(--gr)', razon:'Energía o sueño bajo. Hoy es mantenimiento: no rompas la racha, pero tampoco te fuerces al límite.', proto:'energia_baja'};
+  if(cl===0 && ll<50) return {modo:'EMERGENCIA — Sin cierres', color:'var(--rd)', razon:'Cero cierres + pocas llamadas = caída. Protocolo correctivo activado.', proto:'no_cierro'};
+  if(dem>0||ld>4) return {modo:'Cierre', color:'var(--gn)', razon:'Tienes demos o leads sin seguir. Hoy no prospectas — hoy conviertes lo que ya tienes.', proto:'cerre'};
+  if(re<2&&(dia==='viernes'||dia==='jueves')) return {modo:'Ataque + Contenido', color:'var(--am)', razon:'Buen ritmo de ventas pero déficit de autoridad. Hoy combinas llamadas con al menos 2 reels.', proto:null};
+  return {modo:'Ataque', color:'var(--bk)', razon:'Todo en orden. Hoy es prospección pura. 80-120 llamadas. Sin excusas.', proto:null};
+}
+
+async function decidirDia(){
+  if(!getKey())return;
+  var v=getVars();
+  var local=decidirModoLocal(v);
+
+  // Show mode card immediately (local logic, instant)
+  document.getElementById('modoDelDia').style.display='block';
+  document.getElementById('modoTitulo').textContent=local.modo;
+  document.getElementById('modoRazon').textContent=local.razon;
+  document.getElementById('modoTitulo').style.color=local.color==='var(--bk)'?'#FFFFFF':local.color;
+  document.getElementById('planDelDia').style.display='block';
+  document.getElementById('planBloques').innerHTML='<div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--gr);padding:12px 0"><div class="spin"></div>Generando plan exacto...</div>';
+  document.getElementById('planNoHacer').innerHTML='<div style="font-size:13px;color:var(--gr)">Calculando...</div>';
+  document.getElementById('planMeta').innerHTML='<div style="font-size:13px;color:var(--gr)">Calculando...</div>';
+  document.getElementById('planCompleto').textContent='';
+
+  var tM=DB.days.reduce(function(a,b){return a+(b.money||0)},0);
+  var prompt='Eres un sistema operativo de ejecucion para ventas. Hablas en espanol chileno directo. No motivacion — solo decision y plan.\n\nVARIABLES DEL DIA:\n- Dia: '+v.dia+'\n- Energia: '+v.energia+'/10\n- Horas dormidas: '+v.sueno+'\n- Llamadas ayer: '+v.llamadas+'\n- Cierres ultimos 3 dias: '+v.cierres+'\n- Demos hoy: '+v.demos+'\n- Leads sin seguimiento: '+v.leads+'\n- Reels esta semana: '+v.reels+'\n- Habitos cumplidos ayer: '+v.habitos+'/8\n- Dinero generado hasta hoy: $'+Math.round(tM).toLocaleString('es-CL')+' CLP\n- Meta: $1.000.000 CLP en 30 dias\n\nMODO ACTIVADO: '+local.modo+'\n\nResponde con este formato EXACTO (usa estos titulos exactamente):\n\nPLAN POR BLOQUES:\n[lista numerada de 5 bloques con hora estimada y tarea]\n\nNO HACER HOY:\n[lista de 4 cosas prohibidas hoy]\n\nMETA MINIMA:\n[1 sola linea — la cosa mas importante del dia]\n\nANALISIS:\n[2-3 parrafos de analisis brutal y especifico de la situacion actual con acciones concretas]\n\nSe muy especifico, sin paja. Maximo 300 palabras total.';
+
+  try{
+    var r=await claudeCall(prompt,900);
+    // Parse sections
+    var sections={bloques:'',nohacer:'',meta:'',analisis:''};
+    var cur='';
+    r.split('\n').forEach(function(line){
+      var l=line.trim();
+      if(l.startsWith('PLAN POR BLOQUES:'))cur='bloques';
+      else if(l.startsWith('NO HACER HOY:'))cur='nohacer';
+      else if(l.startsWith('META MINIMA:'))cur='meta';
+      else if(l.startsWith('ANALISIS:'))cur='analisis';
+      else if(l&&cur)sections[cur]+=(sections[cur]?'\n':'')+l;
+    });
+
+    // Render bloques
+    document.getElementById('planBloques').innerHTML=sections.bloques?sections.bloques.split('\n').map(function(b){
+      return b.trim()?'<div style="padding:9px 0;border-bottom:1px solid #F5F5F3;font-size:13px;color:var(--bk2);line-height:1.55">'+b+'</div>':'';
+    }).join(''):'<div style="font-size:13px;color:var(--gr)">'+r+'</div>';
+
+    document.getElementById('planNoHacer').innerHTML=sections.nohacer?sections.nohacer.split('\n').map(function(b){
+      return b.trim()?'<div style="padding:6px 0;font-size:13px;color:var(--rd);display:flex;gap:7px;align-items:flex-start"><span style="font-weight:700;flex-shrink:0">✕</span>'+b+'</div>':'';
+    }).join(''):'<div style="font-size:13px;color:var(--gr)">Ver análisis</div>';
+
+    document.getElementById('planMeta').innerHTML=sections.meta?
+      '<div style="font-size:15px;font-weight:700;color:var(--am);line-height:1.55">'+sections.meta+'</div>':
+      '<div style="font-size:13px;color:var(--gr)">Ver análisis</div>';
+
+    document.getElementById('planCompleto').textContent=sections.analisis||r;
+
+    // If local proto, auto-show protocol
+    if(local.proto){
+      document.getElementById('protocoloResult').style.display='block';
+      document.getElementById('protocoloContent').textContent='Protocolo '+local.modo+' activado automaticamente. Scroll hacia abajo para ver el protocolo completo.';
+    }
+  }catch(e){
+    document.getElementById('planBloques').innerHTML='<div style="color:var(--rd);font-size:13px">Error: '+e.message+'</div>';
+  }
+}
+
+function calcScore(){
+  var calls=parseInt(document.getElementById('s-calls').value)||0;
+  var segu=parseInt(document.getElementById('s-segu').value)||0;
+  var demos=parseInt(document.getElementById('s-demos').value)||0;
+  var cont=parseInt(document.getElementById('s-cont').value)||0;
+  var hab=parseInt(document.getElementById('s-hab').value)||0;
+
+  var sc_calls=Math.min(30,Math.round(calls/120*30));
+  var sc_segu=Math.min(20,Math.round(segu/30*20));
+  var sc_demos=Math.min(20,Math.round(demos/3*20));
+  var sc_cont=Math.min(15,Math.round(cont/5*15));
+  var sc_hab=Math.min(15,Math.round(hab/8*15));
+  var total=sc_calls+sc_segu+sc_demos+sc_cont+sc_hab;
+  var color=total>=80?'var(--gn)':total>=60?'var(--am)':'var(--rd)';
+  var nivel=total>=80?'Dia de elite':total>=60?'Dia aceptable':total>=40?'Dia debajo del minimo':'Dia roto — activar emergencia';
+
+  var fuerte=[], debil=[];
+  if(sc_calls>=24)fuerte.push('Volumen de llamadas');else debil.push('Necesitas mas llamadas — sube a '+Math.round(120*0.8));
+  if(sc_segu>=16)fuerte.push('Seguimiento');else debil.push('Seguimiento bajo — tocar todos los leads');
+  if(sc_demos>=16)fuerte.push('Demos y cierres');else debil.push('Pocas demos — seguir a interesados calientes');
+  if(sc_cont>=12)fuerte.push('Contenido y autoridad');else debil.push('Deficit de contenido — minimo 2 reels proximos dias');
+  if(sc_hab>=12)fuerte.push('Disciplina y habitos');else debil.push('Disciplina baja — revisar habitos manana primero');
+
+  document.getElementById('scoreResult').innerHTML=
+    '<div style="background:var(--bg);border-radius:10px;padding:16px 18px">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'+
+    '<div><div style="font-size:11px;font-weight:700;color:var(--gr);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Score operativo del dia</div>'+
+    '<div style="font-size:12px;color:var(--gr)">'+nivel+'</div></div>'+
+    '<div style="font-size:48px;font-weight:800;color:'+color+'">'+total+'</div></div>'+
+    '<div style="height:8px;background:var(--bd);border-radius:4px;overflow:hidden;margin-bottom:14px"><div style="height:100%;width:'+total+'%;background:'+color+';border-radius:4px;transition:width .8s ease"></div></div>'+
+    '<div class="g2" style="gap:10px">'+
+    '<div style="background:var(--gnbg);border-radius:8px;padding:11px 13px"><div style="font-size:11px;font-weight:700;color:var(--gndk);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Fuerte</div>'+
+    fuerte.map(function(f){return '<div style="font-size:12px;color:var(--gndk);padding:2px 0">+ '+f+'</div>'}).join('')+
+    (fuerte.length===0?'<div style="font-size:12px;color:var(--gndk)">Nada destacable hoy</div>':'')+
+    '</div>'+
+    '<div style="background:var(--rdbg);border-radius:8px;padding:11px 13px"><div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Corregir manana</div>'+
+    debil.map(function(d){return '<div style="font-size:12px;color:var(--rd);padding:2px 0">- '+d+'</div>'}).join('')+
+    (debil.length===0?'<div style="font-size:12px;color:var(--rd)">Nada que corregir</div>':'')+
+    '</div></div></div>';
+}
+
+var PROTOCOLOS={
+  no_cierro:{titulo:'No estoy cerrando',prompt:'Llevo dias sin cerrar. Analiza por que estoy fallando y redisena mi dia de hoy solo para recuperar flujo de caja. Dame un plan de 5 pasos concretos, que cambiar en el script, y como priorizar el pipeline. Hablas en espanol chileno directo. Maximo 220 palabras.'},
+  disperso:{titulo:'Estoy disperso',prompt:'Estoy disperso, saltando tareas, sin foco. Reordena mi dia con foco maximo. Elimina todo lo que no produzca dinero o autoridad directa. Dame un plan minuto a minuto hasta completar los minimos. Espanol chileno directo. Maximo 200 palabras.'},
+  finde:{titulo:'Modo finde / Contenido',prompt:'Es fin de semana. Reorganiza mi dia para crecer autoridad, generar futuros clientes y preparar un lunes devastador. Plan exacto de contenido, reels, historias y preparacion de prospectos. Espanol chileno. Maximo 200 palabras.'},
+  falle:{titulo:'Falle hoy',prompt:'Falle hoy. No cumpli con los minimos. Sin excusas. Dame un protocolo de recuperacion para manana: como arranco, que hago primero, que no puedo hacer hasta cumplir los minimos, y cual es el castigo operativo si vuelvo a fallar. Espanol chileno brutal. Maximo 200 palabras.'},
+  cerre:{titulo:'Cerré un cliente',prompt:'Cerré un cliente hoy. Dame el plan exacto para las proximas 2 horas: entrega rapida, como sacar el caso de exito, como convertirlo en contenido, y como volver a vender inmediatamente. Espanol chileno directo. Maximo 180 palabras.'},
+  energia_baja:{titulo:'Energía baja',prompt:'Tengo energia baja hoy. Dame un plan de recuperacion tactica: que puedo hacer igual (seguimiento simple, organizacion, prospectar sin llamar), como protejo la racha sin quemarme, y cuales son los minimos absolutos para no romper el sistema. Espanol chileno. Maximo 180 palabras.'},
+};
+
+async function protocolo(tipo){
+  if(!getKey())return;
+  var p=PROTOCOLOS[tipo];if(!p)return;
+  document.getElementById('protocoloResult').style.display='block';
+  document.getElementById('protocoloContent').innerHTML='<div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--gr)"><div class="spin"></div>Activando protocolo: '+p.titulo+'...</div>';
+  document.getElementById('p-operativa').scrollTo({top:99999,behavior:'smooth'});
+  try{
+    var r=await claudeCall(p.prompt,600);
+    document.getElementById('protocoloContent').textContent=r;
+  }catch(e){
+    document.getElementById('protocoloContent').innerHTML='<div style="color:var(--rd)">Error: '+e.message+'</div>';
+  }
+}
+
+async function protocoloEmergencia(){
+  if(!getKey())return;
+  document.getElementById('protocoloResult').style.display='block';
+  var days=DB.days;var tCl=days.reduce(function(a,b){return a+(b.closes||0)},0);var tC=days.reduce(function(a,b){return a+(b.calls||0)},0);
+  var prompt='EMERGENCIA. Vendedor en caida. Datos: '+tC+' llamadas totales, '+tCl+' cierres, meta $1.000.000 CLP en 30 dias.\n\nActiva protocolo de emergencia total:\n1. Que hacer AHORA MISMO (proximos 30 min)\n2. Que cambiar en el script urgente\n3. Reglas de emergencia (que esta prohibido hasta recuperar)\n4. Meta de las proximas 24 horas\n5. Mensaje que me tienes que decir para no rendirme\n\nSe brutal. Espanol chileno. Maximo 220 palabras.';
+  document.getElementById('protocoloContent').innerHTML='<div style="display:flex;align-items:center;gap:9px;font-size:13px;color:var(--gr)"><div class="spin"></div>Activando protocolo de emergencia...</div>';
+  try{
+    var r=await claudeCall(prompt,700);
+    document.getElementById('protocoloContent').textContent=r;
+  }catch(e){
+    document.getElementById('protocoloContent').innerHTML='<div style="color:var(--rd)">Error: '+e.message+'</div>';
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+document.getElementById('d-f').value=hoy();
+renderCoach();
+</script>
+</body>
+</html>
