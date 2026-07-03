@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Cliente Local™ — Pitch Deck · Sgore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --black: #0A0A0A;
+  --g50: #F8F8FA;
+  --g100: #F0F0F5;
+  --g200: #E2E2EC;
+  --g400: #9898B0;
+  --g600: #55556B;
+  --purple: #6C22F0;
+  --purple-l: #8B47FF;
+  --purple-s: #F0EAFF;
+  --pink: #FF2E78;
+  --pink-s: #FFF0F6;
+  --green: #00F5A0;
+  --cyan: #00EEFF;
+  --yellow: #EDFF47;
+}
+
+html, body { width:100%; height:100%; overflow:hidden; background:#0A0A0A; font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+
+/* ─── CAROUSEL ─── */
+.viewport { width:100vw; height:100vh; overflow:hidden; position:relative; }
+.track { display:flex; width:100%; height:100%; transition:transform .6s cubic-bezier(.77,0,.175,1); will-change:transform; }
+.slide { flex:0 0 100vw; height:100vh; position:relative; overflow:hidden; display:flex; align-items:stretch; }
+
+/* ─── 2-COL GRID ─── */
+.cols { width:100%; height:100%; display:grid; grid-template-columns:1fr 1fr; position:relative; z-index:2; }
+.cols.wide { grid-template-columns:3fr 2fr; }
+.cols.wide-r { grid-template-columns:2fr 3fr; }
+.cols.single { grid-template-columns:1fr; }
+.col { display:flex; flex-direction:column; justify-content:center; padding:60px 64px; }
+.col-l { padding-right:44px; }
+.col-r { padding-left:44px; }
+.sep { position:absolute; left:50%; top:56px; bottom:56px; width:1px; background:linear-gradient(180deg,transparent,var(--g200),transparent); z-index:3; }
+.sep-d { background:linear-gradient(180deg,transparent,rgba(255,255,255,.07),transparent); }
+
+/* ─── DECORATIVE ─── */
+.dots { position:absolute; inset:0; background-image:radial-gradient(circle,#D8D8E8 1px,transparent 1px); background-size:28px 28px; opacity:.3; pointer-events:none; z-index:0; }
+.glow { position:absolute; border-radius:50%; pointer-events:none; z-index:1; }
+.bar-top { position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--purple),var(--pink),var(--cyan)); z-index:10; }
+.bar-left { position:absolute; left:0; top:0; bottom:0; width:5px; background:linear-gradient(180deg,var(--purple),var(--pink)); border-radius:0 3px 3px 0; z-index:10; }
+
+/* ─── TYPOGRAPHY ─── */
+.h1 { font-size:clamp(36px,4.8vw,62px); font-weight:900; line-height:1.08; letter-spacing:-.04em; margin-bottom:18px; color:var(--black); }
+.h2 { font-size:clamp(28px,3.6vw,46px); font-weight:900; line-height:1.1; letter-spacing:-.035em; margin-bottom:16px; color:var(--black); }
+.h3 { font-size:clamp(22px,2.8vw,34px); font-weight:800; line-height:1.15; letter-spacing:-.03em; margin-bottom:14px; color:var(--black); }
+.body { font-size:clamp(14px,1.35vw,17px); color:var(--g600); line-height:1.72; }
+.wh { color:white; } .wh6 { color:rgba(255,255,255,.6); } .wh4 { color:rgba(255,255,255,.35); }
+.pp { color:var(--purple); } .pp-l { color:var(--purple-l); } .pk { color:var(--pink); } .gr { color:var(--green); } .yl { color:var(--yellow); }
+
+/* ─── BADGE ─── */
+.badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:100px; font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; width:fit-content; margin-bottom:20px; }
+.b-pp { background:var(--purple-s); color:var(--purple); }
+.b-pk { background:var(--pink-s); color:var(--pink); }
+.b-dk { background:var(--black); color:white; }
+.b-gl { background:rgba(108,34,240,.15); color:var(--purple-l); border:1px solid rgba(108,34,240,.3); }
+.b-gl-pk { background:rgba(255,46,120,.12); color:var(--pink); border:1px solid rgba(255,46,120,.25); }
+.b-yl { background:var(--yellow); color:var(--black); }
+
+/* ─── DIV LINE ─── */
+.dline { width:44px; height:3px; background:linear-gradient(90deg,var(--purple),var(--pink)); border-radius:4px; margin-bottom:20px; }
+
+/* ─── PRICE CARD ─── */
+.pc { background:var(--g50); border:1.5px solid var(--g200); border-radius:20px; padding:22px 26px; margin-bottom:12px; }
+.pc-feat { background:linear-gradient(135deg,var(--purple) 0%,#9333EA 100%); border:none; }
+.pc-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--g400); margin-bottom:6px; }
+.pc-feat .pc-label { color:rgba(255,255,255,.5); }
+.pc-num { font-size:clamp(30px,3.5vw,46px); font-weight:900; letter-spacing:-.04em; color:var(--black); line-height:1; margin-bottom:5px; }
+.pc-feat .pc-num { color:white; }
+.pc-note { font-size:13px; color:var(--g400); font-weight:500; }
+.pc-feat .pc-note { color:rgba(255,255,255,.55); }
+.pc-feat .pc-note strong { color:white; }
+
+/* ─── FEAT LIST ─── */
+.fl { list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+.fl li { display:flex; align-items:flex-start; gap:10px; font-size:clamp(13px,1.2vw,15px); color:var(--g600); line-height:1.5; }
+.chk { width:20px; height:20px; border-radius:50%; background:var(--purple-s); color:var(--purple); font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.chk-g { background:#EDFFF7; color:#00A96E; }
+
+/* ─── SYS BLOCKS ─── */
+.sys-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+.sys-b { background:var(--g50); border:1.5px solid var(--g200); border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:5px; position:relative; overflow:hidden; }
+.sys-b::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--purple),var(--pink)); }
+.sys-icon { font-size:20px; margin-bottom:3px; }
+.sys-t { font-size:14px; font-weight:800; color:var(--black); }
+.sys-d { font-size:11px; color:var(--g400); line-height:1.4; }
+
+/* ─── CHECKLIST (slide 3) ─── */
+.cklist { display:flex; flex-direction:column; gap:11px; }
+.ck-item { display:flex; align-items:center; gap:14px; background:var(--g50); border:1.5px solid var(--g200); border-radius:12px; padding:14px 16px; }
+.ck-box { width:26px; height:26px; border-radius:8px; background:var(--purple-s); color:var(--purple); font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ck-text { font-size:clamp(13px,1.2vw,15px); color:var(--black); font-weight:600; }
+.ck-sub { font-size:11px; color:var(--g400); margin-top:1px; }
+
+/* ─── BEFORE/AFTER ─── */
+.ba { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.ba-p { border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:8px; }
+.ba-bef { background:#FFF5F5; border:1.5px solid #FFD5D5; }
+.ba-aft { background:#F5EFFF; border:1.5px solid #D5C0FF; }
+.ba-lbl { font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; margin-bottom:3px; }
+.ba-bef .ba-lbl { color:#FF5252; }
+.ba-aft .ba-lbl { color:var(--purple); }
+.ba-i { font-size:clamp(12px,1.1vw,14px); color:var(--g600); display:flex; gap:8px; align-items:flex-start; line-height:1.45; }
+.ba-bef .ba-i > span:first-child { color:#FF5252; }
+.ba-aft .ba-i > span:first-child { color:var(--purple); }
+
+/* ─── COMPARISON TABLE ─── */
+.comp { display:grid; grid-template-columns:1fr 1fr; gap:12px; height:100%; }
+.comp-c { border-radius:18px; padding:22px 18px; display:flex; flex-direction:column; gap:8px; }
+.comp-a { background:var(--g50); border:1.5px solid var(--g200); }
+.comp-b { background:linear-gradient(155deg,var(--purple),#9333EA); position:relative; overflow:hidden; }
+.comp-b::before { content:'RECOMENDADO'; position:absolute; top:12px; right:-26px; background:var(--yellow); color:var(--black); font-size:9px; font-weight:800; letter-spacing:.08em; padding:4px 32px; transform:rotate(35deg); }
+.comp-h { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+.comp-a .comp-h { color:var(--g400); }
+.comp-b .comp-h { color:rgba(255,255,255,.5); }
+.comp-pr { font-size:clamp(20px,2.2vw,28px); font-weight:900; letter-spacing:-.04em; margin-bottom:8px; }
+.comp-a .comp-pr { color:var(--black); }
+.comp-b .comp-pr { color:white; }
+.comp-i { display:flex; gap:8px; align-items:flex-start; font-size:clamp(12px,1vw,13px); line-height:1.45; }
+.comp-a .comp-i { color:var(--g600); }
+.comp-b .comp-i { color:rgba(255,255,255,.85); }
+.comp-dot { flex-shrink:0; font-size:10px; }
+.comp-a .comp-dot { color:var(--g400); }
+.comp-b .comp-dot { color:var(--green); }
+
+/* ─── GUARANTEE ─── */
+.g-list { display:flex; flex-direction:column; gap:12px; }
+.g-item { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:16px 18px; display:flex; gap:14px; align-items:center; }
+.g-n { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:white; flex-shrink:0; }
+.g-txt { font-size:clamp(13px,1.2vw,15px); color:rgba(255,255,255,.6); line-height:1.5; }
+.g-txt strong { color:white; }
+
+/* ─── STAT ROW ─── */
+.srow { display:flex; gap:11px; }
+.sbox { flex:1; border-radius:14px; padding:16px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.snum { font-size:clamp(26px,3vw,38px); font-weight:900; letter-spacing:-.04em; line-height:1; }
+.slbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; }
+
+/* ─── LOGO ─── */
+.logo { display:flex; align-items:center; gap:10px; }
+.lmark { width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--purple),var(--pink)); display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:17px; letter-spacing:-.04em; flex-shrink:0; }
+.lname { font-size:16px; font-weight:800; letter-spacing:-.02em; }
+.lsub { font-size:11px; color:var(--g400); font-weight:500; }
+
+/* ─── BTN ─── */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:15px 30px; border-radius:13px; font-size:15px; font-weight:800; letter-spacing:-.01em; cursor:pointer; border:none; transition:transform .2s,box-shadow .2s; width:fit-content; }
+.btn-full { width:100%; }
+.btn-p { background:linear-gradient(135deg,var(--purple),var(--pink)); color:white; box-shadow:0 8px 28px rgba(108,34,240,.35); }
+.btn-p:hover { transform:translateY(-2px); box-shadow:0 14px 36px rgba(108,34,240,.45); }
+.btn-o { background:transparent; border:2px solid var(--purple); color:var(--purple); }
+.btn-o:hover { background:var(--purple-s); }
+.btn-w { background:white; color:var(--black); box-shadow:0 8px 28px rgba(0,0,0,.25); }
+
+/* ─── 5-STEP PIPELINE ─── */
+.pipe { display:flex; flex-direction:column; gap:9px; }
+.pipe-item { display:flex; align-items:center; gap:14px; background:var(--g50); border:1.5px solid var(--g200); border-radius:12px; padding:13px 16px; position:relative; }
+.pipe-num { width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,var(--purple),var(--pink)); color:white; font-size:13px; font-weight:900; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.pipe-t { font-size:14px; font-weight:700; color:var(--black); }
+.pipe-d { font-size:12px; color:var(--g400); margin-top:1px; }
+
+/* ─── CARDS GRID (slide 5) ─── */
+.cards-g { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.card-s { background:var(--g50); border:1.5px solid var(--g200); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:5px; }
+.card-icon { font-size:18px; margin-bottom:3px; }
+.card-t { font-size:13px; font-weight:800; color:var(--black); }
+.card-d { font-size:11px; color:var(--g400); line-height:1.4; }
+
+/* ─── NAV ─── */
+.nav { position:fixed; bottom:28px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:14px; background:rgba(10,10,10,.88); backdrop-filter:blur(20px); border-radius:100px; padding:10px 22px; z-index:500; box-shadow:0 8px 32px rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.07); }
+.nbtn { width:36px; height:36px; border-radius:50%; border:1.5px solid rgba(255,255,255,.15); background:transparent; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:15px; transition:all .2s; }
+.nbtn:hover { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.35); }
+.ndots { display:flex; align-items:center; gap:5px; }
+.ndot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.25); cursor:pointer; transition:all .3s; }
+.ndot.active { width:22px; border-radius:3px; background:white; }
+.ncount { font-size:11px; color:rgba(255,255,255,.45); font-weight:600; min-width:34px; text-align:center; }
+
+/* ─── PROGRESS ─── */
+.pbar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--purple),var(--pink)); transition:width .6s cubic-bezier(.77,0,.175,1); z-index:600; border-radius:0 2px 2px 0; }
+
+/* ─── SLIDE CHIP ─── */
+.chip { position:fixed; top:18px; right:22px; background:rgba(10,10,10,.75); color:rgba(255,255,255,.4); font-size:11px; font-weight:600; padding:6px 14px; border-radius:100px; backdrop-filter:blur(10px); z-index:500; letter-spacing:.04em; border:1px solid rgba(255,255,255,.07); }
+
+/* ─── NOTES PANEL (tecla N) ─── */
+.notes-panel {
+  position: fixed;
+  bottom: 88px; left: 50%; transform: translateX(-50%);
+  width: min(700px, 92vw);
+  background: rgba(10,10,20,.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(108,34,240,.35);
+  border-radius: 16px;
+  padding: 16px 22px;
+  z-index: 400;
+  display: none;
+  transition: opacity .25s;
+  box-shadow: 0 8px 40px rgba(0,0,0,.5);
+}
+.notes-panel.visible { display:block; }
+.notes-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:9px;
+}
+.notes-label {
+  font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+  color:rgba(108,34,240,.8);
+}
+.notes-kbd {
+  font-size:10px; color:rgba(255,255,255,.25); background:rgba(255,255,255,.07);
+  border-radius:5px; padding:2px 7px; font-weight:600;
+}
+.notes-text { font-size:13px; color:rgba(255,255,255,.75); line-height:1.65; }
+.notes-hint {
+  position:fixed; bottom:88px; left:50%; transform:translateX(-50%);
+  background:rgba(108,34,240,.25); border:1px solid rgba(108,34,240,.35);
+  color:rgba(255,255,255,.5); font-size:11px; font-weight:600;
+  padding:6px 14px; border-radius:100px; z-index:400; letter-spacing:.04em;
+  white-space:nowrap; cursor:pointer;
+  transition:opacity .3s;
+}
+.notes-hint.hidden { opacity:0; pointer-events:none; }
+
+/* ─── PULSE ─── */
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
+.pdot { width:8px; height:8px; border-radius:50%; animation:pulse 2s infinite; }
+</style>
+</head>
+<body>
+
+<div class="pbar" id="pbar"></div>
+<div class="chip" id="chip">1 / 12</div>
+<div class="notes-hint" id="nhint" onclick="toggleNotes()">📋 Notas — pulsa N</div>
+<div class="notes-panel" id="notes">
+  <div class="notes-header">
+    <span class="notes-label">🎙 Tu guion — solo tú ves esto</span>
+    <span class="notes-kbd">N para cerrar</span>
+  </div>
+  <div class="notes-text" id="notes-text">—</div>
+</div>
+
+<div class="viewport" id="vp">
+<div class="track" id="track">
+
+
+<!-- ══════════════════════════════════
+  S1 — PORTADA
+══════════════════════════════════ -->
+<div class="slide" id="s0" style="background:var(--black);"
+  data-notes="Di: 'Te voy a mostrar rápido cómo podemos mejorar la forma en que tu negocio se presenta online y las dos formas en que podemos trabajar juntos. En 10 minutos vas a entender el sistema completo.'">
+
+  <div class="glow" style="top:-120px;right:-120px;width:480px;height:480px;background:radial-gradient(circle,rgba(108,34,240,.35) 0%,transparent 70%);"></div>
+  <div class="glow" style="bottom:-80px;left:-80px;width:360px;height:360px;background:radial-gradient(circle,rgba(255,46,120,.22) 0%,transparent 70%);"></div>
+  <div class="bar-top"></div>
+
+  <div class="cols" style="padding:64px 80px;align-items:center;position:relative;z-index:2;">
+    <div class="sep sep-d"></div>
+    <!-- LEFT -->
+    <div style="display:flex;flex-direction:column;justify-content:center;padding-right:56px;">
+      <div class="logo" style="margin-bottom:34px;">
+        <div class="lmark">S</div>
+        <div><div class="lname wh">Sgore</div><div class="lsub">by Nexvore</div></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px;">Propuesta de servicio</div>
+      <div class="h2 wh" style="font-size:clamp(34px,4.5vw,58px);">Sistema<br>Cliente Local™</div>
+      <div class="dline"></div>
+      <div class="body wh6" style="font-size:clamp(15px,1.5vw,18px);max-width:400px;line-height:1.75;">Una estructura digital para que tu negocio se vea más profesional, genere más confianza y sea más fácil de contactar.</div>
+      <div style="margin-top:28px;display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 18px;width:fit-content;">
+        <div class="pdot" style="background:var(--green);flex-shrink:0;"></div>
+        <span style="font-size:13px;color:rgba(255,255,255,.5);font-weight:600;">Presentación de diagnóstico y propuesta</span>
+      </div>
+    </div>
+    <!-- RIGHT — browser mockup -->
+    <div style="display:flex;flex-direction:column;justify-content:center;padding-left:56px;gap:14px;">
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;">
+        <div style="background:rgba(255,255,255,.04);padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:6px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#FF5F57;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#FFBD2E;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#28C840;"></div>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:5px;height:16px;margin-left:8px;display:flex;align-items:center;padding:0 8px;">
+            <span style="font-size:10px;color:rgba(255,255,255,.3);">tunegocio.cl</span>
+          </div>
+        </div>
+        <div style="padding:18px 16px;display:flex;flex-direction:column;gap:10px;">
+          <div style="background:linear-gradient(135deg,rgba(108,34,240,.25),rgba(255,46,120,.15));border-radius:10px;padding:18px 16px;display:flex;flex-direction:column;gap:8px;">
+            <div style="height:12px;border-radius:6px;background:rgba(255,255,255,.25);width:75%;"></div>
+            <div style="height:8px;border-radius:4px;background:rgba(255,255,255,.12);width:55%;"></div>
+            <div style="margin-top:6px;display:flex;gap:8px;">
+              <div style="height:28px;width:90px;border-radius:8px;background:linear-gradient(90deg,var(--purple),var(--pink));"></div>
+              <div style="height:28px;width:70px;border-radius:8px;background:rgba(255,255,255,.08);"></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;"><div style="width:14px;height:14px;border-radius:4px;background:rgba(108,34,240,.3);"></div><div style="height:6px;border-radius:3px;background:rgba(255,255,255,.1);"></div><div style="height:6px;border-radius:3px;background:rgba(255,255,255,.06);width:70%;"></div></div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;"><div style="width:14px;height:14px;border-radius:4px;background:rgba(255,46,120,.25);"></div><div style="height:6px;border-radius:3px;background:rgba(255,255,255,.1);"></div><div style="height:6px;border-radius:3px;background:rgba(255,255,255,.06);width:60%;"></div></div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;"><div style="width:14px;height:14px;border-radius:4px;background:rgba(0,245,160,.2);"></div><div style="height:6px;border-radius:3px;background:rgba(255,255,255,.1);"></div><div style="height:6px;border-radius:3px;background:rgba(255,255,255,.06);width:65%;"></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="background:rgba(108,34,240,.2);border:1px solid rgba(108,34,240,.35);color:var(--purple-l);border-radius:100px;padding:7px 16px;font-size:12px;font-weight:700;">Sitio Web</div>
+        <div style="background:rgba(255,46,120,.15);border:1px solid rgba(255,46,120,.3);color:var(--pink);border-radius:100px;padding:7px 16px;font-size:12px;font-weight:700;">WhatsApp</div>
+        <div style="background:rgba(0,245,160,.12);border:1px solid rgba(0,245,160,.25);color:var(--green);border-radius:100px;padding:7px 16px;font-size:12px;font-weight:700;">Garantía 90 días</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S2 — EL PROBLEMA REAL
+══════════════════════════════════ -->
+<div class="slide" id="s1" style="background:var(--white);"
+  data-notes="Di: 'Muchas veces el negocio es bueno, pero online no transmite la misma confianza. Y eso hace que la gente dude o se vaya con otra opción. ¿Cómo está tu presencia digital hoy?'">
+
+  <div class="dots"></div>
+  <div class="bar-top"></div>
+  <div class="cols" style="padding:60px 80px;align-items:center;position:relative;z-index:2;">
+    <div class="sep"></div>
+    <div class="col col-l">
+      <div class="badge b-pk">El problema</div>
+      <div class="h2">El problema no es<br>solo no tener<br><span class="pk">página web.</span></div>
+      <div class="dline"></div>
+      <div class="body" style="font-size:clamp(14px,1.4vw,17px);max-width:380px;line-height:1.78;">El problema es que muchos negocios se ven menos profesionales online de lo que realmente son en persona.</div>
+      <div style="margin-top:22px;background:var(--g50);border:1.5px solid var(--g200);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:10px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--pink);flex-shrink:0;"></div>
+        <span style="font-size:13px;color:var(--g600);">Eso hace que la gente dude antes de comprar.</span>
+      </div>
+    </div>
+    <div class="col col-r">
+      <div class="ba">
+        <div class="ba-p ba-bef">
+          <div class="ba-lbl">Presencia débil</div>
+          <div class="ba-i"><span>✕</span><span>Página antigua o sin página</span></div>
+          <div class="ba-i"><span>✕</span><span>Instagram desordenado</span></div>
+          <div class="ba-i"><span>✕</span><span>Mensaje poco claro</span></div>
+          <div class="ba-i"><span>✕</span><span>Sin botón directo a WhatsApp</span></div>
+          <div class="ba-i"><span>✕</span><span>Sin creativos que generen confianza</span></div>
+          <div class="ba-i"><span>✕</span><span>Sin estructura para recibir contactos</span></div>
+        </div>
+        <div class="ba-p ba-aft">
+          <div class="ba-lbl">Con el sistema</div>
+          <div class="ba-i"><span>✓</span><span>Sitio moderno y claro</span></div>
+          <div class="ba-i"><span>✓</span><span>Perfil y redes ordenadas</span></div>
+          <div class="ba-i"><span>✓</span><span>Mensaje directo y confiable</span></div>
+          <div class="ba-i"><span>✓</span><span>WhatsApp integrado siempre visible</span></div>
+          <div class="ba-i"><span>✓</span><span>Creativos que transmiten calidad</span></div>
+          <div class="ba-i"><span>✓</span><span>Estructura clara para convertir visitas</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S3 — LO QUE PIENSA EL CLIENTE FINAL
+══════════════════════════════════ -->
+<div class="slide" id="s2" style="background:var(--white);"
+  data-notes="Di: 'Tu cliente final no siempre te lo dice, pero evalúa todo esto en segundos antes de escribirte. Si algo falla en esta lista, simplemente cierra la página y va con otro.'">
+
+  <div class="dots"></div>
+  <div class="bar-left"></div>
+  <div class="cols" style="padding:60px 80px 60px 90px;align-items:center;position:relative;z-index:2;">
+    <div class="sep"></div>
+    <div class="col col-l">
+      <div class="badge b-pp">El cliente evalúa</div>
+      <div class="h2">Antes de comprar,<br>la gente <span class="pp">revisa.</span></div>
+      <div class="dline"></div>
+      <div class="body" style="max-width:360px;line-height:1.78;">Hoy una persona no decide solo por precio. También mira si el negocio se ve confiable, claro y fácil de contactar.</div>
+      <div style="margin-top:24px;background:var(--black);border-radius:12px;padding:16px 18px;">
+        <div style="font-size:14px;color:white;font-weight:700;line-height:1.55;">Todo eso pasa en los primeros <span style="color:var(--yellow);">5 segundos.</span></div>
+      </div>
+    </div>
+    <div class="col col-r">
+      <div class="cklist">
+        <div class="ck-item">
+          <div class="ck-box">?</div>
+          <div><div class="ck-text">¿Se ve profesional?</div><div class="ck-sub">Imagen, diseño, coherencia visual</div></div>
+        </div>
+        <div class="ck-item">
+          <div class="ck-box">?</div>
+          <div><div class="ck-text">¿Entiendo rápido qué vende?</div><div class="ck-sub">Claridad del mensaje y los servicios</div></div>
+        </div>
+        <div class="ck-item">
+          <div class="ck-box">?</div>
+          <div><div class="ck-text">¿Tiene fotos o pruebas?</div><div class="ck-sub">Galería, trabajos anteriores, reseñas</div></div>
+        </div>
+        <div class="ck-item">
+          <div class="ck-box">?</div>
+          <div><div class="ck-text">¿Puedo escribir fácil?</div><div class="ck-sub">Botón WhatsApp, formulario visible</div></div>
+        </div>
+        <div class="ck-item">
+          <div class="ck-box">?</div>
+          <div><div class="ck-text">¿Me genera confianza?</div><div class="ck-sub">Sensación general de la presencia</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S4 — NUESTRA SOLUCIÓN
+══════════════════════════════════ -->
+<div class="slide" id="s3" style="background:var(--white);"
+  data-notes="Di: 'Esto no se trata solo de diseño. Se trata de que una persona vea tu negocio y entienda rápido por qué debería confiar en ti y cómo contactarte.'">
+
+  <div class="dots"></div>
+  <div class="bar-top"></div>
+  <div class="cols" style="padding:60px 80px;align-items:center;position:relative;z-index:2;">
+    <div class="sep"></div>
+    <div class="col col-l">
+      <div class="badge b-pp">Nuestra solución</div>
+      <div class="h2">Creamos una presencia<br>digital que<br><span class="pp">vende confianza.</span></div>
+      <div class="dline"></div>
+      <div class="body" style="max-width:380px;line-height:1.78;margin-bottom:24px;">Ordenamos tu página, tu mensaje, tus creativos y tu forma de contacto para que tu negocio se vea más profesional y sea más fácil de elegir.</div>
+    </div>
+    <div class="col col-r">
+      <div class="pipe">
+        <div class="pipe-item">
+          <div class="pipe-num">1</div>
+          <div><div class="pipe-t">Página web clara</div><div class="pipe-d">Diseñada para generar confianza y contactos</div></div>
+        </div>
+        <div class="pipe-item">
+          <div class="pipe-num">2</div>
+          <div><div class="pipe-t">Oferta ordenada</div><div class="pipe-d">Textos que explican qué haces y por qué elegirte</div></div>
+        </div>
+        <div class="pipe-item">
+          <div class="pipe-num">3</div>
+          <div><div class="pipe-t">Creativos profesionales</div><div class="pipe-d">Imágenes y posts para redes y anuncios</div></div>
+        </div>
+        <div class="pipe-item">
+          <div class="pipe-num">4</div>
+          <div><div class="pipe-t">WhatsApp directo</div><div class="pipe-d">Botón de contacto integrado y siempre visible</div></div>
+        </div>
+        <div class="pipe-item">
+          <div class="pipe-num">5</div>
+          <div><div class="pipe-t">Mejora continua</div><div class="pipe-d">Optimizamos y aplicamos cosas nuevas cada mes</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S5 — QUÉ INCLUYE
+══════════════════════════════════ -->
+<div class="slide" id="s4" style="background:var(--g50);"
+  data-notes="Di: 'Esto es lo que normalmente una agencia separa en varias cosas y cobra por cada parte. Nosotros lo unimos en una estructura simple para que tu negocio se vea mejor y sea más claro de golpe.'">
+
+  <div class="bar-left"></div>
+  <div class="cols" style="padding:60px 80px 60px 90px;align-items:center;position:relative;z-index:2;">
+    <div class="sep"></div>
+    <div class="col col-l">
+      <div class="badge b-pp">Qué incluye</div>
+      <div class="h2">Qué mejoramos<br>en tu <span class="pp">negocio.</span></div>
+      <div class="dline"></div>
+      <div class="body" style="max-width:360px;line-height:1.78;margin-bottom:22px;">Trabajamos sobre los puntos que más afectan la confianza y la conversión de tu negocio online.</div>
+      <div style="background:var(--black);border-radius:12px;padding:14px 18px;">
+        <div style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.55;">Una agencia tradicional cobra todo esto por separado. <strong style="color:white;">Nosotros lo integramos en un sistema.</strong></div>
+      </div>
+    </div>
+    <div class="col col-r">
+      <div class="cards-g">
+        <div class="card-s">
+          <div class="card-icon">🔍</div>
+          <div class="card-t">Diagnóstico inicial</div>
+          <div class="card-d">Revisamos tu situación digital actual punto a punto</div>
+        </div>
+        <div class="card-s">
+          <div class="card-icon">🌐</div>
+          <div class="card-t">Sitio web</div>
+          <div class="card-d">Creación o mejora completa, rápido y responsive</div>
+        </div>
+        <div class="card-s">
+          <div class="card-icon">✍️</div>
+          <div class="card-t">Textos comerciales</div>
+          <div class="card-d">Mensajes claros que explican qué vendes y por qué elegirte</div>
+        </div>
+        <div class="card-s">
+          <div class="card-icon">💬</div>
+          <div class="card-t">WhatsApp directo</div>
+          <div class="card-d">Botón de contacto integrado en todo el sitio</div>
+        </div>
+        <div class="card-s">
+          <div class="card-icon">🎨</div>
+          <div class="card-t">Creativos</div>
+          <div class="card-d">Posts e imágenes para redes y anuncios</div>
+        </div>
+        <div class="card-s">
+          <div class="card-icon">📈</div>
+          <div class="card-t">Recomendaciones</div>
+          <div class="card-d">Plan de mejoras para seguir creciendo después</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S6 — OPCIÓN 1
+══════════════════════════════════ -->
+<div class="slide" id="s5" style="background:var(--white);"
+  data-notes="Di: 'Esta opción es para partir rápido. Te deja con una base mejor armada, más profesional y clara. Pago único, sin mensualidad, sin compromiso largo.'">
+
+  <div class="dots"></div>
+  <div class="bar-top"></div>
+  <div class="cols" style="padding:60px 80px;align-items:center;position:relative;z-index:2;">
+    <div class="sep"></div>
+    <div class="col col-l">
+      <div class="badge b-pp">Opción 1</div>
+      <div class="h2">Presencia<br>Digital Inicial</div>
+      <div class="dline"></div>
+      <div class="body" style="max-width:370px;line-height:1.78;margin-bottom:22px;">Para negocios que quieren verse más profesionales rápido y tener una base clara sin pagar mensualidad.</div>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;padding:10px 16px;width:fit-content;margin-bottom:24px;">
+        <div class="pdot" style="background:var(--green);"></div>
+        <span style="font-size:13px;color:var(--g600);font-weight:600;">Ideal para partir ahora</span>
+      </div>
+      <div class="btn btn-o">Quiero esta opción →</div>
+    </div>
+    <div class="col col-r">
+      <div class="pc">
+        <div class="pc-label">Pago único · sin mensualidad</div>
+        <div style="font-size:13px;color:var(--g400);font-weight:600;text-decoration:line-through;margin-bottom:2px;">Valor normal $97.990 CLP</div>
+        <div class="pc-num">$49.990</div>
+        <div class="pc-note">CLP · Precio de lanzamiento</div>
+      </div>
+      <ul class="fl">
+        <li><div class="chk">✓</div><span>Diagnóstico inicial del negocio</span></li>
+        <li><div class="chk">✓</div><span>Revisión de presencia digital actual</span></li>
+        <li><div class="chk">✓</div><span>Página básica profesional y responsive</span></li>
+        <li><div class="chk">✓</div><span>Botón directo a WhatsApp</span></li>
+        <li><div class="chk">✓</div><span>Textos comerciales más claros</span></li>
+        <li><div class="chk">✓</div><span>Primeros creativos base para redes</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S7 — OPCIÓN 2
+══════════════════════════════════ -->
+<div class="slide" id="s6" style="background:var(--g50);"
+  data-notes="Di: 'Esta es la opción más completa. Aquí no solo te entregamos algo y desaparecemos. Te acompañamos, mejoramos y vamos aplicando cosas nuevas durante los 90 días. Y tiene garantía incluida.'">
+
+  <div style="position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(108,34,240,.1) 0%,transparent 70%);pointer-events:none;z-index:1;"></div>
+  <div class="bar-top"></div>
+  <div class="cols" style="padding:60px 80px;align-items:center;position:relative;z-index:2;">
+    <div class="sep"></div>
+    <div class="col col-l">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+        <div class="badge b-dk" style="margin-bottom:0;">Opción 2</div>
+        <div class="badge b-yl" style="margin-bottom:0;">★ Recomendado</div>
+      </div>
+      <div class="h2">Sistema Cliente<br>Local™ <span class="pp">90 días.</span></div>
+      <div class="dline"></div>
+      <div class="body" style="max-width:370px;line-height:1.78;margin-bottom:22px;">Para negocios que quieren una estructura más completa, acompañamiento y mejoras continuas durante 90 días con garantía incluida.</div>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--purple-s);border:1.5px solid rgba(108,34,240,.2);border-radius:10px;padding:10px 16px;width:fit-content;margin-bottom:24px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--purple);"></div>
+        <span style="font-size:13px;color:var(--purple);font-weight:600;">Incluye garantía de resultado</span>
+      </div>
+      <div class="btn btn-p">Quiero el Sistema Completo →</div>
+    </div>
+    <div class="col col-r">
+      <div class="pc pc-feat">
+        <div class="pc-label">Instalación inicial</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.4);font-weight:600;text-decoration:line-through;margin-bottom:2px;">Valor normal $277.000 CLP</div>
+        <div class="pc-num">$150.000 CLP</div>
+        <div class="pc-note">Precio de lanzamiento · luego <strong>$27 USD/mes</strong> × 3 meses</div>
+      </div>
+      <ul class="fl">
+        <li><div class="chk chk-g">✓</div><span>Diagnóstico completo del negocio</span></li>
+        <li><div class="chk chk-g">✓</div><span>Sitio web más estratégico y completo</span></li>
+        <li><div class="chk chk-g">✓</div><span>Creativos estratégicos para redes y anuncios</span></li>
+        <li><div class="chk chk-g">✓</div><span>Optimización y mejoras cada mes</span></li>
+        <li><div class="chk chk-g">✓</div><span>Nuevas herramientas aplicadas en tiempo real</span></li>
+        <li><div class="chk chk-g">✓</div><span>Acompañamiento personalizado 90 días</span></li>
+        <li><div class="chk chk-g">✓</div><span>Garantía de resultado incluida</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S8 — COMPARACIÓN
+══════════════════════════════════ -->
+<div class="slide" id="s7" style="background:var(--white);"
+  data-notes="Di: 'Las dos opciones sirven, pero dependen del nivel en que quieras trabajar. Una es base inicial. La otra es sistema completo con acompañamiento. ¿Cuál se acerca más a lo que necesitas?'">
+
+  <div class="dots"></div>
+  <div class="bar-top"></div>
+  <div class="cols" style="padding:60px 80px;align-items:center;position:relative;z-index:2;">
+    <div style="display:flex;flex-direction:column;justify-content:center;padding:0 44px 0 0;flex:0 0 300px;">
+      <div class="badge b-pp">Comparación</div>
+      <div class="h3">¿Cuál opción te conviene más?</div>
+      <div class="dline"></div>
+      <div class="body" style="line-height:1.78;margin-bottom:22px;">Ambas mejoran tu presencia. La diferencia está en la profundidad del acompañamiento.</div>
+      <div style="background:var(--black);border-radius:12px;padding:16px 18px;">
+        <div style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.55;">💡 La mayoría elige el sistema de 90 días porque quieren resultados con estructura, no solo una página.</div>
+      </div>
+    </div>
+    <div style="flex:1;padding-left:44px;display:flex;flex-direction:column;justify-content:center;">
+      <div class="comp" style="height:auto;">
+        <div class="comp-c comp-a">
+          <div class="comp-h">Presencia Inicial</div>
+          <div style="font-size:11px;color:var(--g400);font-weight:600;text-decoration:line-through;margin-bottom:1px;">$97.990 CLP</div>
+          <div class="comp-pr">$49.990 CLP</div>
+          <div class="comp-i"><span class="comp-dot">·</span><span>Pago único, sin mensualidad</span></div>
+          <div class="comp-i"><span class="comp-dot">·</span><span>Base profesional rápida</span></div>
+          <div class="comp-i"><span class="comp-dot">·</span><span>Página básica profesional</span></div>
+          <div class="comp-i"><span class="comp-dot">·</span><span>Primeros creativos base</span></div>
+          <div class="comp-i"><span class="comp-dot">·</span><span>Sin acompañamiento mensual</span></div>
+          <div class="comp-i"><span class="comp-dot">·</span><span>Sin garantía incluida</span></div>
+          <div class="comp-i"><span class="comp-dot">·</span><span>Ideal para partir rápido</span></div>
+        </div>
+        <div class="comp-c comp-b">
+          <div class="comp-h">Sistema 90 días</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);font-weight:600;text-decoration:line-through;margin-bottom:1px;">$277.000 CLP</div>
+          <div class="comp-pr">$150.000 CLP</div>
+          <div class="comp-i"><span class="comp-dot">✓</span><span>Instalación + $27 USD/mes × 3</span></div>
+          <div class="comp-i"><span class="comp-dot">✓</span><span>Estructura completa</span></div>
+          <div class="comp-i"><span class="comp-dot">✓</span><span>Sitio estratégico completo</span></div>
+          <div class="comp-i"><span class="comp-dot">✓</span><span>Creativos continuos</span></div>
+          <div class="comp-i"><span class="comp-dot">✓</span><span>Acompañamiento 90 días</span></div>
+          <div class="comp-i"><span class="comp-dot">✓</span><span>Garantía de resultado incluida</span></div>
+          <div class="comp-i"><span class="comp-dot">✓</span><span>Ideal para crecer con sistema</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S9 — GARANTÍA
+══════════════════════════════════ -->
+<div class="slide" id="s8" style="background:var(--black);"
+  data-notes="Di: 'Esto lo hacemos porque no queremos que todo el riesgo lo tomes tú. Si decimos que podemos ayudarte, también tenemos que estar dispuestos a respaldarlo. Esto solo aplica al plan de 90 días.'">
+
+  <div class="glow" style="top:-80px;right:30%;width:380px;height:380px;background:radial-gradient(circle,rgba(108,34,240,.22) 0%,transparent 70%);"></div>
+  <div class="bar-top"></div>
+  <div class="cols" style="padding:60px 80px;align-items:center;position:relative;z-index:2;">
+    <div class="sep sep-d"></div>
+    <div class="col col-l">
+      <div class="badge b-gl" style="margin-bottom:20px;">Garantía real</div>
+      <div class="h2 wh">Si no cumplimos,<br><span class="pp-l">respondemos.</span></div>
+      <div class="dline"></div>
+      <div class="body wh6" style="max-width:360px;line-height:1.78;margin-bottom:24px;">En el plan de 90 días trabajamos con garantía. Si no cumplimos el objetivo acordado al inicio, tienes 3 opciones de respaldo.</div>
+      <div style="background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.2);border-radius:12px;padding:14px 18px;">
+        <div style="font-size:14px;color:var(--green);font-weight:700;line-height:1.5;">Solo aplica al plan Sistema 90 días.<br><span style="color:rgba(255,255,255,.55);font-weight:400;">No al plan Presencia Inicial.</span></div>
+      </div>
+    </div>
+    <div class="col col-r">
+      <div class="g-list">
+        <div class="g-item">
+          <div class="g-n" style="background:var(--purple);">1</div>
+          <div class="g-txt"><strong>Devolución del dinero</strong> pagado por el servicio, sin preguntas.</div>
+        </div>
+        <div class="g-item">
+          <div class="g-n" style="background:var(--pink);">2</div>
+          <div class="g-txt"><strong>Seguimos trabajando sin costo adicional</strong> hasta dejar implementada la estructura prometida.</div>
+        </div>
+        <div class="g-item">
+          <div class="g-n" style="background:#00A96E;">3</div>
+          <div class="g-txt">Bono de compensación de <strong style="color:var(--green);">$20.000 CLP</strong> si no cumplimos el objetivo inicial.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S10 — PRUEBA DE FE
+══════════════════════════════════ -->
+<div class="slide" id="s9" style="background:var(--black);"
+  data-notes="Di: 'La idea es que esto sea justo. Si trabajamos juntos y cumplimos, ganamos ambos. Si no cumplimos, nosotros también respondemos. No queremos tu plata si no somos capaces de ayudarte.'">
+
+  <div class="glow" style="bottom:-60px;left:38%;width:360px;height:360px;background:radial-gradient(circle,rgba(0,245,160,.13) 0%,transparent 70%);"></div>
+  <div class="cols" style="padding:60px 80px;align-items:center;position:relative;z-index:2;">
+    <div class="sep sep-d"></div>
+    <div class="col col-l">
+      <div class="badge b-gl-pk" style="margin-bottom:20px;">Prueba de fe</div>
+      <div class="h1 wh" style="font-size:clamp(34px,4.5vw,56px);">No tomas el<br>riesgo solo <span class="gr">tú.</span></div>
+      <div class="dline" style="background:linear-gradient(90deg,var(--green),var(--cyan));"></div>
+      <div class="body wh6" style="max-width:360px;line-height:1.78;">Si tú confías en nosotros, <strong class="wh">nosotros también tomamos riesgo contigo.</strong> No queremos venderte una página y desaparecer.</div>
+    </div>
+    <div class="col col-r" style="gap:14px;">
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:22px;">
+        <div style="font-size:15px;color:rgba(255,255,255,.8);line-height:1.72;font-weight:500;">"Queremos construir un caso real, mejorar la presencia digital de tu negocio y demostrar que el sistema puede generar resultados."</div>
+        <div style="margin-top:14px;display:flex;align-items:center;gap:9px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:900;">S</div>
+          <span style="font-size:12px;color:rgba(255,255,255,.35);font-weight:600;">Equipo Sgore · Nexvore</span>
+        </div>
+      </div>
+      <div class="srow">
+        <div class="sbox" style="background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.2);">
+          <div class="snum gr">90</div><div class="slbl wh4">Días</div>
+        </div>
+        <div class="sbox" style="background:rgba(108,34,240,.15);border:1px solid rgba(108,34,240,.3);">
+          <div class="snum pp-l">3</div><div class="slbl wh4">Garantías</div>
+        </div>
+        <div class="sbox" style="background:rgba(255,46,120,.1);border:1px solid rgba(255,46,120,.2);">
+          <div class="snum pk">0</div><div class="slbl wh4">Riesgo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S11 — POR QUÉ AHORA
+══════════════════════════════════ -->
+<div class="slide" id="s10" style="background:var(--white);"
+  data-notes="Di: 'Aunque no estés haciendo publicidad, tu presencia online ya está hablando por tu negocio. La pregunta es si está hablando bien o mal. Cada persona que te busca online se lleva una impresión.'">
+
+  <div class="dots"></div>
+  <div class="bar-top"></div>
+  <div class="cols single" style="padding:60px 120px;align-items:center;justify-content:center;position:relative;z-index:2;">
+    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;max-width:700px;margin:0 auto;">
+      <div class="badge b-pp" style="margin-bottom:22px;">Por qué actuar ahora</div>
+      <div class="h2" style="font-size:clamp(30px,4vw,52px);text-align:center;margin-bottom:16px;">Tu presencia digital<br>ya está <span class="pp">vendiendo por ti.</span></div>
+      <div class="dline" style="margin:0 auto 22px;"></div>
+      <div class="body" style="font-size:clamp(15px,1.5vw,19px);line-height:1.78;text-align:center;margin-bottom:32px;">La pregunta es si está vendiendo <strong style="color:var(--black);">confianza</strong> o <strong style="color:var(--pink);">desconfianza</strong>.<br>Cada persona que revisa tu negocio online se lleva una impresión. Esa impresión puede acercarla o alejarla.</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <div style="background:var(--g50);border:1.5px solid var(--g200);border-radius:12px;padding:14px 20px;text-align:center;">
+          <div style="font-size:24px;font-weight:900;color:var(--purple);letter-spacing:-.03em;">Hoy</div>
+          <div style="font-size:12px;color:var(--g400);margin-top:3px;">tu cliente ya está buscando</div>
+        </div>
+        <div style="background:var(--g50);border:1.5px solid var(--g200);border-radius:12px;padding:14px 20px;text-align:center;">
+          <div style="font-size:24px;font-weight:900;color:var(--pink);letter-spacing:-.03em;">5 seg</div>
+          <div style="font-size:12px;color:var(--g400);margin-top:3px;">para formarse una opinión</div>
+        </div>
+        <div style="background:var(--black);border-radius:12px;padding:14px 20px;text-align:center;">
+          <div style="font-size:24px;font-weight:900;color:var(--green);letter-spacing:-.03em;">1 oportunidad</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;">de dar una buena impresión</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+  S12 — CIERRE
+══════════════════════════════════ -->
+<div class="slide" id="s11" style="background:var(--black);"
+  data-notes="Di: 'Según lo que me contaste, yo te recomendaría partir con [opción X]. Si te parece, dejamos reservado el cupo hoy y empezamos con el diagnóstico esta semana. ¿Te acomoda?'">
+
+  <div class="glow" style="top:-100px;left:-100px;width:480px;height:480px;background:radial-gradient(circle,rgba(108,34,240,.28) 0%,transparent 70%);"></div>
+  <div class="glow" style="bottom:-80px;right:-80px;width:380px;height:380px;background:radial-gradient(circle,rgba(255,46,120,.18) 0%,transparent 70%);"></div>
+  <div class="bar-top"></div>
+  <div class="cols" style="padding:60px 80px;align-items:center;position:relative;z-index:2;">
+    <div class="sep sep-d"></div>
+    <div class="col col-l">
+      <div class="logo" style="margin-bottom:30px;">
+        <div class="lmark" style="width:40px;height:40px;font-size:19px;">S</div>
+        <div><div class="lname wh" style="font-size:18px;">Sgore</div><div class="lsub">Sistema Cliente Local™</div></div>
+      </div>
+      <div class="h2 wh" style="font-size:clamp(28px,3.8vw,48px);">¿Quieres que<br>revisemos<br><span class="yl">tu caso?</span></div>
+      <div class="dline" style="background:linear-gradient(90deg,var(--yellow),var(--green));"></div>
+      <div class="body wh6" style="max-width:340px;line-height:1.78;margin-bottom:28px;">Podemos partir con el diagnóstico esta semana y definir cuál opción hace más sentido para tu negocio.</div>
+      <div class="btn btn-w" style="font-size:15px;">Empezar diagnóstico →</div>
+      <div style="margin-top:18px;font-size:12px;color:rgba(255,255,255,.2);letter-spacing:.04em;">@nexvorecl · Sistema Cliente Local™</div>
+    </div>
+    <div class="col col-r" style="gap:14px;">
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:22px 24px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.25);margin-bottom:14px;">Elige la opción que mejor se ajusta</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <!-- Opción A -->
+          <div style="padding:14px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-size:11px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Opción 1 · Presencia Inicial</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.3);font-weight:600;text-decoration:line-through;margin-bottom:1px;">$97.990 CLP</div>
+              <div style="font-size:26px;font-weight:900;color:white;letter-spacing:-.04em;">$49.990 CLP</div>
+            </div>
+            <div style="font-size:11px;color:rgba(255,255,255,.25);text-align:right;line-height:1.5;">Pago<br>único</div>
+          </div>
+          <!-- Opción B -->
+          <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(108,34,240,.35),rgba(147,51,234,.25));border:1px solid rgba(108,34,240,.45);border-radius:12px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:7px;right:10px;background:var(--yellow);color:var(--black);font-size:9px;font-weight:800;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.06em;">★ Recomendado</div>
+            <div style="margin-top:10px;">
+              <div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Opción 2 · Sistema 90 días</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.3);font-weight:600;text-decoration:line-through;margin-bottom:1px;">$277.000 CLP</div>
+              <div style="font-size:26px;font-weight:900;color:white;letter-spacing:-.04em;">$150.000 CLP</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;">+ $27 USD/mes × 3 meses · con garantía</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Trust -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:rgba(0,245,160,.08);border:1px solid rgba(0,245,160,.15);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:16px;font-weight:900;color:var(--green);">✓ Garantía</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:2px;">Plan 90 días</div>
+        </div>
+        <div style="background:rgba(108,34,240,.12);border:1px solid rgba(108,34,240,.25);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:16px;font-weight:900;color:var(--purple-l);">Sin riesgo</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:2px;">tú eliges</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- /track -->
+</div><!-- /viewport -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button class="nbtn" onclick="move(-1)">&#8592;</button>
+  <div class="ndots" id="dots"></div>
+  <div class="ncount" id="cnt">1/12</div>
+  <button class="nbtn" onclick="move(1)">&#8594;</button>
+</div>
+
+<script>
+const TOTAL = 12;
+let cur = 0;
+let sx = 0, drag = false;
+let notesOpen = false;
+
+const track = document.getElementById('track');
+const cnt = document.getElementById('cnt');
+const chip = document.getElementById('chip');
+const pbar = document.getElementById('pbar');
+const dotsEl = document.getElementById('dots');
+const notesPanel = document.getElementById('notes');
+const notesText = document.getElementById('notes-text');
+const nhint = document.getElementById('nhint');
+
+// Build dots
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'ndot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+}
+
+function goTo(n) {
+  cur = Math.max(0, Math.min(TOTAL - 1, n));
+  track.style.transform = `translateX(-${cur * 100}vw)`;
+  cnt.textContent = `${cur + 1}/${TOTAL}`;
+  chip.textContent = `${cur + 1} / ${TOTAL}`;
+  pbar.style.width = `${((cur + 1) / TOTAL) * 100}%`;
+  dotsEl.querySelectorAll('.ndot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  // Update notes text
+  const slideEl = document.getElementById('s' + cur);
+  const note = slideEl ? slideEl.getAttribute('data-notes') : '';
+  notesText.textContent = note || '—';
+}
+
+function move(dir) { goTo(cur + dir); }
+
+function toggleNotes() {
+  notesOpen = !notesOpen;
+  notesPanel.classList.toggle('visible', notesOpen);
+  nhint.classList.toggle('hidden', notesOpen);
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (['ArrowRight', ' '].includes(e.key)) { e.preventDefault(); move(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); move(-1); }
+  if (e.key === 'Home') goTo(0);
+  if (e.key === 'End') goTo(TOTAL - 1);
+  if (e.key === 'n' || e.key === 'N') toggleNotes();
+  if (e.key === 'Escape') { notesOpen = false; notesPanel.classList.remove('visible'); nhint.classList.remove('hidden'); }
+});
+
+// Touch / mouse drag
+const vp = document.getElementById('vp');
+vp.addEventListener('touchstart', e => { sx = e.touches[0].clientX; drag = true; }, { passive: true });
+vp.addEventListener('touchend', e => {
+  if (!drag) return;
+  if (Math.abs(sx - e.changedTouches[0].clientX) > 60) move(sx > e.changedTouches[0].clientX ? 1 : -1);
+  drag = false;
+});
+vp.addEventListener('mousedown', e => { sx = e.clientX; drag = true; });
+vp.addEventListener('mouseup', e => {
+  if (!drag) return;
+  if (Math.abs(sx - e.clientX) > 60) move(sx > e.clientX ? 1 : -1);
+  drag = false;
+});
+
+goTo(0);
+</script>
+</body>
+</html>
