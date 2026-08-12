@@ -1,0 +1,13 @@
+{
+  "name": "barberia-scraper",
+  "version": "1.0.0",
+  "description": "Scraper de barberias en Google Maps para contacto en frio (Sgore / gorros Mateo)",
+  "type": "module",
+  "scripts": {
+    "scrape": "node scraper.js",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}
