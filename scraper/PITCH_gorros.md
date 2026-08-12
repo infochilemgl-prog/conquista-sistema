@@ -66,3 +66,51 @@ No lo describas, pásaselo. Que lo toque, que sienta la terminación. Tú hablas
 2. **No expliques de más.** Cada frase extra después del cierre te resta. Pregunta y calla.
 3. **El silencio es tu arma.** Después de "¿te dejo dos?", no digas nada más.
 4. **Si dice no, es entrenamiento.** Anota, agradece, siguiente. El volumen fabrica la venta.
+
+---
+
+## Versión CHAT amistosa (WhatsApp / Instagram DM)
+
+Por chat va relajado, en burbujas cortas, como a un conocido. No mandes todo junto:
+suelta una, espera que responda, sigue. Emojis con moderación (1 por mensaje máximo).
+
+**Apertura (mensaje 1):**
+> Buenas 🙌 ¿hablo con el dueño? Soy Mateo, ando acá en Viña haciendo gorros
+
+**Si responde / muestra interés (mensaje 2):**
+> Te tiro la buena al toque: los dejo a precio mayorista, $13.000 c/u, y **desde 1 solo**.
+> Nada de llevar docena como te piden los mayoristas 😅
+
+**El puente (mensaje 3):**
+> La idea es fácil: pones un par en la vitrina a tu precio y lo que se vende es ganancia
+> tuya limpia. No inmovilizas plata ni arriesgas stock
+
+**Fotos + cierre suave (mensaje 4):**
+> Te mando un par de fotos pa que los veas 👇
+> *(mandas 2-3 fotos reales)*
+> Si te tinca paso a dejártelos en persona cuando te acomode. ¿Te muestro 2 o 3?
+
+### Objeciones en modo chat
+
+- **"Está caro"**
+  > Es mayorista compadre, el mismo precio del que lleva docena. Y si lo revendes, el
+  > precio final lo pones tú 😉
+
+- **"No sé si se vende"**
+  > Por eso partes con 1 o 2, no con 12. Si no rota en un par de semanas te lo cambio por
+  > otro modelo, no pierdes nada
+
+- **"Lo pienso"**
+  > Dale tranqui 🙌 ¿qué te frena, el modelo o el momento? tengo varios pa mostrarte
+
+### Si no responde (segundo toque, 2 días después)
+
+> Buenas de nuevo 🙌 ¿te sirve que pase esta semana con un par de muestras? sin
+> compromiso, los ves y me dices no más
+
+### Tono chat — las reglas
+
+- Frases cortas, minúscula, como hablas de verdad. Nada de "Estimado" ni discurso.
+- Una pregunta al final de cada tanda para mantener la pelota en su cancha.
+- No mandes 5 mensajes seguidos sin respuesta. Uno o dos, y esperas.
+- Foto real > mil palabras. El gorro se vende solo cuando lo ven.
