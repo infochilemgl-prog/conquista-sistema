@@ -130,7 +130,7 @@ export default function Ventas() {
         </div>
         <p className="mt-3 text-sm text-slate-300">
           {hoy === 0
-            ? 'Cero. El manual lo dice: lo único entre NexoSolar y su primer peso son mensajes enviados a instaladores.'
+            ? 'Cero. El manual lo dice: lo único entre NexoVolt y su primer peso son mensajes enviados a instaladores.'
             : pct >= 100
               ? 'Meta cumplida. Esto es lo que separa al 1% del resto.'
               : `Te faltan ${META_DIARIA - hoy} para la meta. Un mensaje por WhatsApp desde Prospectos cuenta solo.`}

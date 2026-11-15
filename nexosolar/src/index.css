@@ -4,8 +4,10 @@
   --color-navy: #0d2440;
   --color-brand: #1f6fd6;
   --color-sun: #f5a623;
+  --color-fondo: #f1f4f9;
+  --color-ink: #17212f;
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-fondo text-ink antialiased;
 }

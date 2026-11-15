@@ -27,7 +27,7 @@ export const PLANTILLAS = [
     id: 'apertura',
     nombre: 'Apertura',
     texto: (p) =>
-      `Hola ${p.contacto_nombre || ''}, soy Mateo de NexoSolar Leads. Estoy armando una alianza con un par de instaladores solares de la región para entregarles cotizaciones de dueños de casa con boletas altas que, con el alza de tarifas, realmente quieren instalar paneles ahora. ¿Te interesaría recibir entre 8 y 12 cotizaciones calificadas al mes, o prefieres que te mande los detalles por acá?`.replace(
+      `Hola ${p.contacto_nombre || ''}, soy Mateo de NexoVolt Leads. Estoy armando una alianza con un par de instaladores solares de la región para entregarles cotizaciones de dueños de casa con boletas altas que, con el alza de tarifas, realmente quieren instalar paneles ahora. ¿Te interesaría recibir entre 8 y 12 cotizaciones calificadas al mes, o prefieres que te mande los detalles por acá?`.replace(
         'Hola , ',
         'Hola, '
       ),
@@ -36,7 +36,7 @@ export const PLANTILLAS = [
     id: 'seguimiento',
     nombre: 'Seguimiento',
     texto: (p) =>
-      `Hola ${p.contacto_nombre || ''}, Mateo de NexoSolar Leads de nuevo. Te escribí hace unos días por lo de las cotizaciones calificadas de dueños de casa para ${p.nombre_empresa}. Sigo con un cupo disponible este mes, con garantía por contrato. ¿Te mando los detalles?`.replace(
+      `Hola ${p.contacto_nombre || ''}, Mateo de NexoVolt Leads de nuevo. Te escribí hace unos días por lo de las cotizaciones calificadas de dueños de casa para ${p.nombre_empresa}. Sigo con un cupo disponible este mes, con garantía por contrato. ¿Te mando los detalles?`.replace(
         'Hola , ',
         'Hola, '
       ),

@@ -30,11 +30,11 @@ export default function Login() {
     <div className="flex min-h-screen items-center justify-center bg-navy px-4">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center text-white">
-          <div className="mb-2 text-4xl">☀️</div>
+          <div className="mb-2 text-4xl">⚡</div>
           <h1 className="text-2xl font-bold">
-            Nexo<span className="text-sun">Solar</span>
+            Nexo<span className="text-brand">Volt</span> <span className="text-sun">⚡</span>
           </h1>
-          <p className="mt-1 text-sm text-slate-300">Panel de gestión</p>
+          <p className="mt-1 text-sm text-slate-300">Panel de gestión · Leads</p>
         </div>
         <form
           onSubmit={handleSubmit}
