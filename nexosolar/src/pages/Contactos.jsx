@@ -180,12 +180,17 @@ export default function Contactos() {
   }, [])
 
   async function load() {
-    const { data, error } = await supabase
-      .from('leads')
-      .select('*')
-      .order('created_at', { ascending: false })
-    if (!error) setLeads(data || [])
-    setLoading(false)
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (!error) setLeads(data || [])
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const filtrados = useMemo(() => {

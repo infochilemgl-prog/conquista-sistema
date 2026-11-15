@@ -7,6 +7,8 @@ import Login from './pages/Login'
 import Pipeline from './pages/Pipeline'
 import Contactos from './pages/Contactos'
 import Calendario from './pages/Calendario'
+import Ventas from './pages/Ventas'
+import Prospectos from './pages/Prospectos'
 
 const AuthContext = createContext({ session: null, loading: true })
 export const useAuth = () => useContext(AuthContext)
@@ -74,6 +76,22 @@ export default function App() {
           element={
             <ProtectedLayout>
               <Calendario />
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/ventas"
+          element={
+            <ProtectedLayout>
+              <Ventas />
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/prospectos"
+          element={
+            <ProtectedLayout>
+              <Prospectos />
             </ProtectedLayout>
           }
         />

@@ -148,16 +148,21 @@ export default function Calendario() {
   }, [])
 
   async function load() {
-    const [citasRes, leadsRes] = await Promise.all([
-      supabase
-        .from('citas')
-        .select('*, leads(nombre, telefono, comuna)')
-        .order('fecha'),
-      supabase.from('leads').select('id, nombre, comuna').order('nombre'),
-    ])
-    if (!citasRes.error) setCitas(citasRes.data || [])
-    if (!leadsRes.error) setLeads(leadsRes.data || [])
-    setLoading(false)
+    try {
+      const [citasRes, leadsRes] = await Promise.all([
+        supabase
+          .from('citas')
+          .select('*, leads(nombre, telefono, comuna)')
+          .order('fecha'),
+        supabase.from('leads').select('id, nombre, comuna').order('nombre'),
+      ])
+      if (!citasRes.error) setCitas(citasRes.data || [])
+      if (!leadsRes.error) setLeads(leadsRes.data || [])
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const citasPorDia = useMemo(() => {

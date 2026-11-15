@@ -2,6 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 
 const links = [
+  { to: '/ventas', label: 'Ventas' },
+  { to: '/prospectos', label: 'Prospectos' },
   { to: '/', label: 'Pipeline' },
   { to: '/contactos', label: 'Contactos' },
   { to: '/calendario', label: 'Calendario' },

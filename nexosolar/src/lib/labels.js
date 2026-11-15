@@ -34,8 +34,9 @@ export function formatCLP(n) {
   }).format(n)
 }
 
-export function waLink(telefono) {
+export function waLink(telefono, texto) {
   const digits = (telefono || '').replace(/\D/g, '')
   const full = digits.startsWith('56') ? digits : `56${digits.replace(/^0/, '')}`
-  return `https://wa.me/${full}`
+  const base = `https://wa.me/${full}`
+  return texto ? `${base}?text=${encodeURIComponent(texto)}` : base
 }
