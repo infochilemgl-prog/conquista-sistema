@@ -1,12 +1,12 @@
-# NexoSolar Leads — Manual Operativo del Servicio
+# NexoVolt Leads — Manual Operativo del Servicio
 
 Documento maestro v1 · 15 de noviembre de 2026
 Agencia de generación de clientes para instaladores solares en Chile.
 
 ## Resumen ejecutivo
 
-NexoSolar Leads vende un solo resultado: **más clientes para los instaladores
-de paneles solares**. El instalador paga una tarifa mensual, NexoSolar le
+NexoVolt Leads vende un solo resultado: **más clientes para los instaladores
+de paneles solares**. El instalador paga una tarifa mensual, NexoVolt le
 entrega entre 8 y 12 cotizaciones calificadas al mes con garantía, y el
 instalador cierra trabajos de 4 a 6 millones de pesos. El modelo está copiado
 de Concrete AI (Niv Kochavi) y adaptado al mercado chileno, donde las tarifas
@@ -14,18 +14,18 @@ eléctricas suben entre 40% y 60% y menos del 1% de las viviendas tiene
 paneles. La prioridad no es construir sistemas, es contactar instaladores y
 cerrar el primer cliente con la oferta de fundador.
 
-> La regla que ordena todo el negocio: el valor de NexoSolar depende de qué
+> La regla que ordena todo el negocio: el valor de NexoVolt depende de qué
 > tan cerca está del dinero del instalador. No se venden "me gusta" ni
 > seguidores. Se venden cotizaciones que se convierten en trabajos pagados.
 
-## 1. Qué es NexoSolar Leads
+## 1. Qué es NexoVolt Leads
 
 Agencia de marketing que ayuda a empresas instaladoras de paneles solares a
 conseguir más clientes usando publicidad digital. No vende producto físico ni
 instala paneles. Vende una habilidad: conseguir dueños de casa interesados y
 entregárselos al instalador listos para cotizar.
 
-**La distinción clave:** el cliente de NexoSolar es el instalador. El dueño
+**La distinción clave:** el cliente de NexoVolt es el instalador. El dueño
 de casa es el cliente del instalador.
 
 ## 2. El modelo de negocio
@@ -41,7 +41,7 @@ SMMA productizado: paquete fijo, resultado medible, garantía.
 
 ## 3. La marca
 
-- **Nombre:** NexoSolar Leads. Nicho en el nombre, dice lo que hace, "nexo"
+- **Nombre:** NexoVolt Leads. Nicho en el nombre, dice lo que hace, "nexo"
   conecta con la raíz Nexvore.
 - **Dominio:** nexosolarleads.com
 - **Logo:** wordmark, NEXO en navy y SOLAR en azul, sol reemplazando la O;
@@ -126,7 +126,7 @@ el alza de tarifas como amenaza, tiempo de recuperación de la inversión.
 
 **Apertura (WhatsApp / llamada en frío):**
 
-> "Hola [nombre], soy Mateo de NexoSolar Leads. Estoy armando una alianza con
+> "Hola [nombre], soy Mateo de NexoVolt Leads. Estoy armando una alianza con
 > un par de instaladores solares de la región para entregarles cotizaciones
 > de dueños de casa con boletas altas que, con el alza de tarifas, realmente
 > quieren instalar paneles ahora. ¿Te interesaría recibir entre 8 y 12
@@ -265,7 +265,7 @@ Code, un módulo a la vez.
 3. Lead entra al panel; el agendador IA lo contacta por WhatsApp al instante.
 4. Se agenda la visita técnica; el instalador recibe la cita con toda la
    información.
-5. El instalador cotiza y cierra. NexoSolar cobra su tarifa.
+5. El instalador cotiza y cierra. NexoVolt cobra su tarifa.
 6. Seguimiento automático hasta 365 días para los que no cerraron.
 
 ## 12. Números y metas
@@ -287,5 +287,90 @@ Code, un módulo a la vez.
    siguiente.
 
 > La marca, la oferta, el logo, el pitch y la estructura del panel ya están.
-> Lo único entre NexoSolar Leads y su primer peso son mensajes enviados a
+> Lo único entre NexoVolt Leads y su primer peso son mensajes enviados a
 > instaladores.
+
+## 14. Parámetros de operación (sistema Concrete AI adaptado a NexoVolt)
+
+La configuración exacta con la que opera NexoVolt, parámetro por parámetro.
+
+### 14.1 Territorio y exclusividad
+- **Radio de anuncios:** 20–25 km desde la base del instalador (máx. ~30
+  min de viaje para cotizar).
+- **Separación entre clientes:** ≥50 km entre centros, o radios sin solape.
+- **Población mínima por zona:** ~200.000 habitantes por cliente.
+- **Zonas de referencia:** Gran Valparaíso (~1M hab.) soporta 2–3 clientes
+  bien separados (Viña/Valparaíso vs Quillota/La Calera); Gran Santiago se
+  vende por sectores (oriente, norte, sur, poniente); en regiones, un
+  cliente por ciudad (La Serena–Coquimbo, Rancagua, Talca, Concepción).
+- **En la llamada:** verificar la población de su zona EN VIVO (Google) y
+  decirla. Si ya hay cliente en la zona, se dice a los 10 minutos y se
+  ofrece la zona vecina o lista de espera.
+
+### 14.2 Targeting Meta (Chile)
+- **Ubicación:** pin en la base del cliente + radio 20–25 km.
+- **Edad:** 30–65+.
+- **Intereses (equivalente chileno del "high income + renovation"):**
+  mejoras del hogar, construcción, remodelación, jardinería, casa propia,
+  energía solar, eficiencia energética, ahorro de energía.
+- **Proxy de ingreso** (en Chile Meta no segmenta por "top % de ZIP
+  codes"): el radio se centra en sectores de ingresos medios-altos y el
+  formulario filtra por `tramo_boleta` — boleta sobre $40.000 es el
+  verdadero filtro de capacidad de pago.
+- **Presupuesto:** $10.000–15.000 CLP/día por cliente, con la tarjeta del
+  cliente directo en Meta.
+- **Creativos (3 en prueba permanente):** (1) 4-fotos-en-1 con la cuadrilla
+  — el ganador histórico; (2) video corto de instalación para reels; (3)
+  versión "profesional" con la oferta de evaluación gratis. La foto de
+  cuadrilla es obligatoria en los primeros 7 días: reduce el costo por
+  lead a la mitad.
+
+### 14.3 Formulario de calificación (ya construido en `/captar/:slug`)
+Mapa 1:1 con el del video: ¿dueño o arriendo? ✓ (`es_dueno`), urgencia ✓
+(`plazo`), tamaño del trabajo → `tramo_boleta` (la boleta predice el
+tamaño del sistema), ingreso del hogar → `tramo_boleta` (proxy chileno),
+viabilidad → `techo_sol` + `tipo_vivienda`. Scope del proyecto y
+financiamiento/crédito: se agregan como pregunta extra solo si el
+instalador los ofrece.
+
+### 14.4 Cadencias automáticas (implementadas en el panel)
+- **Lead nuevo (formulario):** confirmación inmediata + seguimientos a
+  **1, 2, 4, 7, 14, 21 y 28 días** (las 4 semanas intensivas del video);
+  después, reactivaciones mensuales hasta 365 días.
+- **Cita agendada:** confirmación al momento ("responde SÍ"), recordatorio
+  **8 horas antes** y aviso **1 hora antes**.
+- **Conversión esperada:** ~50% de leads a cita con seguimiento constante.
+
+### 14.5 Cierre y cobro (parámetros)
+- Cobro **en la llamada** (el pago sella la seriedad); contrato firmado el
+  mismo día; split-pay 50/50 ofrecido proactivamente (mitad hoy, mitad a
+  30 días).
+- Onboarding agendado **antes de colgar** (día y hora concretos).
+- Setup completo: **7 días**.
+
+### 14.6 Onboarding — checklist de 7 días
+| Día | Acción |
+|---|---|
+| 0 (llamada) | Cobro + contrato + onboarding agendado + pedir fotos de trabajos y cuadrilla |
+| 1 | Crear `cliente` en el panel (slug, logo, color) + revisar/crear Google Business |
+| 2–3 | Creativos (4-en-1, video, profesional) + copys + landing con su marca |
+| 4 | Llamada corta: conectar su tarjeta a Meta Ads; campañas en borrador |
+| 5–6 | QA punta a punta: lead de prueba → formulario → panel → WhatsApp → cita |
+| 7 | Ads ON + secuencia de reseñas a sus clientes pasados + aviso al cliente |
+
+### 14.7 Value-adds incluidos (costo cero, cierran ventas)
+- **Google Business gratis** si no lo tiene o está mal hecho.
+- **Secuencia de reseñas por WhatsApp** a su lista de clientes pasados.
+  Plantilla: *"Hola [nombre], soy [instalador] de [empresa] — te instalamos
+  los paneles hace un tiempo. ¿Nos ayudarías con una reseña en Google?
+  Te toma 1 minuto y nos sirve muchísimo: [link]. ¡Gracias!"*
+  Meta: 15–20 reseñas la primera semana.
+
+### 14.8 KPIs objetivo
+| Métrica | Objetivo |
+|---|---|
+| Costo por lead (Meta) | $5.000–15.000 CLP |
+| Lead → cita | 40–50% |
+| Cierre del instalador | 30–40% de las visitas |
+| Cotizaciones entregadas | 8–12 al mes por cliente (garantía: 30 en 90 días) |
+| Utilidad extra del cliente | $2–3M CLP/mes |

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../supabaseClient'
 import { useApp } from '../context/app'
-import { plantilla } from '../lib/plantillas'
+import { tareasCita } from '../lib/plantillas'
 
 const DIAS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
 const HORA_INICIO = 8
@@ -78,7 +78,7 @@ function CitaBloque({ cita, compact = false }) {
   )
 }
 
-function NuevaCitaModal({ clienteId, leads, fechaInicial, onClose, onCreated }) {
+function NuevaCitaModal({ clienteId, empresa, leads, fechaInicial, onClose, onCreated }) {
   const [leadId, setLeadId] = useState('')
   const [fecha, setFecha] = useState(fechaInicial || '')
   const [hora, setHora] = useState('10:00')
@@ -103,16 +103,10 @@ function NuevaCitaModal({ clienteId, leads, fechaInicial, onClose, onCreated }) 
     })
     if (!err) {
       await supabase.from('leads').update({ estado: 'Cita agendada' }).eq('id', leadId)
-      const recordar = new Date(new Date(`${fecha}T${hora}`).getTime() - 3 * 3600000)
-      await supabase.from('tareas_automaticas').insert({
-        cliente_id: clienteId,
-        lead_id: leadId,
-        tipo: 'recordatorio',
-        canal: 'whatsapp',
-        programada_para: recordar.toISOString(),
-        estado: 'pendiente',
-        payload: plantilla('recordatorio', lead, '', hora),
-      })
+      // Confirmación inmediata + recordatorios 8h y 1h antes
+      await supabase
+        .from('tareas_automaticas')
+        .insert(tareasCita(lead, clienteId, empresa, new Date(`${fecha}T${hora}`)))
     }
     setSaving(false)
     if (err) {
@@ -140,7 +134,8 @@ function NuevaCitaModal({ clienteId, leads, fechaInicial, onClose, onCreated }) 
         <input value={notas} onChange={(e) => setNotas(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <p className="text-xs text-slate-400">
-          Se crea un recordatorio automático por WhatsApp 3 horas antes.
+          Automático por WhatsApp: confirmación al agendar y recordatorios 8 h
+          y 1 h antes de la visita.
         </p>
         <div className="flex justify-end gap-2">
           <button type="button" onClick={onClose} className="rounded-lg px-3 py-2 text-sm text-slate-600">Cancelar</button>
@@ -327,6 +322,7 @@ export default function Calendario() {
       {modal && (
         <NuevaCitaModal
           clienteId={cliente.id}
+          empresa={cliente.nombre_empresa}
           leads={leads}
           fechaInicial={dayKey(fechaRef)}
           onClose={() => setModal(false)}

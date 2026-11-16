@@ -20,6 +20,12 @@ export const PLANTILLAS_LEAD = [
     texto: (lead) =>
       `Hola ${nombrePila(lead)}, vi que estabas interesado en paneles solares. Con el alza de tarifas, realmente conviene cotizar ahora. ¿Quieres que te agende la evaluación gratis?`,
   },
+  {
+    id: 'cita_agendada',
+    nombre: 'Cita agendada (confirmar)',
+    texto: (lead, empresa, cuando = '[fecha y hora]') =>
+      `Hola ${nombrePila(lead)}, tu visita para la evaluación de paneles solares quedó agendada para ${cuando}. Respóndeme SÍ para confirmar. — ${empresa}`,
+  },
 ]
 
 export function plantilla(id, lead, empresa, extra) {
@@ -27,9 +33,41 @@ export function plantilla(id, lead, empresa, extra) {
   return t.texto(lead, empresa, extra)
 }
 
-// Tareas de nurture que se crean cuando entra un lead por el formulario
+// Recordatorios de cita (modelo del video): confirmación al agendar,
+// recordatorio 8 horas antes y aviso 1 hora antes.
+export function tareasCita(lead, clienteId, empresa, fechaCita) {
+  const hora = fechaCita.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })
+  const cuando = fechaCita.toLocaleString('es-CL', {
+    weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
+  })
+  const base = { cliente_id: clienteId, lead_id: lead.id, canal: 'whatsapp', estado: 'pendiente' }
+  return [
+    {
+      ...base,
+      tipo: 'confirmacion',
+      programada_para: new Date().toISOString(),
+      payload: plantilla('cita_agendada', lead, empresa, cuando),
+    },
+    {
+      ...base,
+      tipo: 'recordatorio',
+      programada_para: new Date(fechaCita.getTime() - 8 * 3600000).toISOString(),
+      payload: plantilla('recordatorio', lead, empresa, hora),
+    },
+    {
+      ...base,
+      tipo: 'recordatorio',
+      programada_para: new Date(fechaCita.getTime() - 1 * 3600000).toISOString(),
+      payload: plantilla('recordatorio', lead, empresa, hora),
+    },
+  ]
+}
+
+// Tareas de nurture que se crean cuando entra un lead por el formulario.
+// Cadencia intensiva de 4 semanas (modelo Concrete AI): confirmación
+// inmediata y seguimientos a 1, 2, 4, 7, 14, 21 y 28 días.
 export function tareasNurture(lead, clienteId, empresa) {
-  const dias = [0, 1, 2, 4, 7]
+  const dias = [0, 1, 2, 4, 7, 14, 21, 28]
   return dias.map((d, i) => ({
     cliente_id: clienteId,
     lead_id: lead.id,

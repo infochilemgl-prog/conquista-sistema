@@ -12,7 +12,7 @@ import {
 import { supabase } from '../supabaseClient'
 import { useApp } from '../context/app'
 import { ESTADOS, TRAMO_LABELS, formatCLP, waLink } from '../lib/labels'
-import { plantilla } from '../lib/plantillas'
+import { plantilla, tareasCita } from '../lib/plantillas'
 import LeadDetail from '../components/LeadDetail'
 
 function AccionIcono({ title, onClick, href, children }) {
@@ -117,7 +117,7 @@ function Column({ estado, leads, children }) {
   )
 }
 
-function AgendarModal({ lead, clienteId, onClose, onDone }) {
+function AgendarModal({ lead, clienteId, empresa, onClose, onDone }) {
   const [fecha, setFecha] = useState('')
   const [hora, setHora] = useState('10:00')
   const [notas, setNotas] = useState('Visita técnica — evaluación de ahorro')
@@ -130,17 +130,10 @@ function AgendarModal({ lead, clienteId, onClose, onDone }) {
     const fechaISO = new Date(`${fecha}T${hora}`).toISOString()
     await supabase.from('citas').insert({ cliente_id: clienteId, lead_id: lead.id, fecha: fechaISO, notas })
     await supabase.from('leads').update({ estado: 'Cita agendada' }).eq('id', lead.id)
-    // Recordatorio automático 3 horas antes
-    const recordar = new Date(new Date(`${fecha}T${hora}`).getTime() - 3 * 3600000)
-    await supabase.from('tareas_automaticas').insert({
-      cliente_id: clienteId,
-      lead_id: lead.id,
-      tipo: 'recordatorio',
-      canal: 'whatsapp',
-      programada_para: recordar.toISOString(),
-      estado: 'pendiente',
-      payload: plantilla('recordatorio', lead, '', hora),
-    })
+    // Confirmación inmediata + recordatorios 8h y 1h antes
+    await supabase
+      .from('tareas_automaticas')
+      .insert(tareasCita(lead, clienteId, empresa, new Date(`${fecha}T${hora}`)))
     setSaving(false)
     onDone()
     onClose()
@@ -282,6 +275,7 @@ export default function Oportunidades() {
         <AgendarModal
           lead={agendar}
           clienteId={cliente.id}
+          empresa={cliente.nombre_empresa}
           onClose={() => setAgendar(null)}
           onDone={load}
         />
