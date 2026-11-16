@@ -163,6 +163,62 @@ el alza de tarifas como amenaza, tiempo de recuperación de la inversión.
 **Tono:** calmado, empático, consultivo. Confirmaciones al agendar, horas
 antes y cerca de la cita. Seguimiento automático hasta 365 días.
 
+### Tácticas de la llamada (desglose de un cierre real de Concrete AI)
+
+**Exclusividad territorial — el mecanismo completo:**
+- Un solo instalador por zona: radio de anuncios de 20–25 km por cliente y
+  separación mínima de ~60 km entre clientes, para que nunca compitan por
+  los mismos dueños de casa.
+- En la llamada se verifica EN VIVO la población de la comuna/zona ("Gran
+  Valparaíso tiene ~1 millón de habitantes — da de sobra para un solo
+  instalador"). Transparencia que vende.
+- Escasez real: "si ya tuviera cliente en tu zona, te lo habría dicho a los
+  10 minutos y no habría llamada". Y cuando sea verdad: "los cupos por zona
+  se están llenando".
+
+**Ancla de costo — portales de leads compartidos:**
+- Preguntar SIEMPRE en discovery: "¿has comprado leads antes? ¿cuánto
+  pagabas por lead?" En el video: $100 USD por un lead compartido con 5
+  contratistas, a veces del rubro equivocado, sin teléfono visible hasta
+  pagar. Ese dolor contado por el propio prospecto vale más que todo tu
+  pitch: anótalo y úsalo al presentar la exclusividad.
+
+**Discovery adicional (para la calculadora):**
+- Tamaño de cuadrilla, trabajos/mes en temporada alta vs baja, tamaño
+  promedio del trabajo, SU tasa de cierre actual ("de 5 visitas, ¿cuántas
+  cierras?"), y cuánto invirtió antes en marketing. La calculadora se arma
+  con los números QUE ÉL DIJO, corregidos a la baja ("¿$10M el trabajo?
+  usemos $9M, conservador").
+
+**Objeción fina — "¿y si no cierro yo?":**
+- "¿Si me consiguen 15 cotizaciones y yo cierro 3, igual me devuelven?"
+  Nuestra garantía es más limpia que la del video: garantizamos
+  COTIZACIONES entregadas (30 en 90 días), no trabajos cerrados, así no
+  depende de la tasa de cierre del instalador y no hay letra chica.
+
+**Cierre y post-cierre (la secuencia exacta):**
+1. Precio → calculadora → garantía → "¿partimos?"
+2. Ofrecer split-pay proactivamente si duda ("¿prefieres dividirlo?").
+3. **Cobrar EN la llamada** ("lo hacemos altiro para que el equipo empiece
+   esta semana") y mandar contrato firmado después, mismo día.
+4. **Agendar la llamada de onboarding antes de colgar** (día y hora
+   concretos, nunca "te escribo").
+5. Pedir en el acto: fotos de trabajos + **foto de la cuadrilla en 7 días**
+   — en el video, poner personas reales en el anuncio REDUJO A LA MITAD el
+   costo por lead. Es la tarea #1 del cliente nuevo.
+6. Setup completo en 7 días: funnel, creativos, número, onboarding.
+
+**Value-adds gratis que cierran (y sirven en Chile):**
+- **Perfil de Google Business gratis** si no lo tiene (casi ningún
+  instalador chico lo tiene bien hecho).
+- **Secuencia de reseñas por WhatsApp**: con su lista de clientes pasados,
+  automatizar un mensaje pidiendo reseña en Google → 15–20 reseñas en una
+  semana → ranking local para siempre. Costo cero, valor percibido enorme.
+
+**Lo que NO se copia del video:** testimonios photoshopeados. Los nuestros
+salen reales del cliente fundador; mientras tanto, el panel con datos y la
+garantía por contrato son la prueba.
+
 ## 9. Onboarding del cliente (primeros 7 días)
 
 Datos del negocio y logo, fotos de trabajos y del equipo, conectar tarjeta a
