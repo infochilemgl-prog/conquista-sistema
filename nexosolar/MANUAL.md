@@ -219,6 +219,25 @@ antes y cerca de la cita. Seguimiento automático hasta 365 días.
 salen reales del cliente fundador; mientras tanto, el panel con datos y la
 garantía por contrato son la prueba.
 
+### Propiedad percibida vs propiedad real (cómo se comunica el sistema)
+
+En el pitch, todo lo que el cliente valora se nombra como SUYO; todo lo
+que genera el resultado queda del lado de NexoVolt sin decirlo. Vende
+(nadie compra sintiéndose arrendatario) y retiene (irse = quedarse sin la
+máquina).
+
+| Del cliente (se dice fuerte en la llamada) | De NexoVolt (no se cede) |
+|---|---|
+| "TU marca, TU logo, TUS fotos en la landing" | El dominio y la landing (`/captar/:slug` vive en el Vercel de NexoVolt) |
+| "TUS leads, exclusivos, te los exportamos cuando quieras" | El panel, el esquema de datos, las automatizaciones |
+| "TU agenda: las citas caen en tus horarios" | Plantillas, flujos de nurture, know-how de targeting |
+| "TÚ cierras y TÚ te quedas con la utilidad" | Las campañas y la cuenta publicitaria configurada |
+| "TU tarjeta paga los ads directo a Meta: tú controlas el gasto" | El fee de NexoVolt, separado y limpio del ad spend |
+
+Regla al hablar: cada frase del pitch que describa valor usa "tu/tuyo";
+la infraestructura se describe como "nosotros nos encargamos de", nunca
+se ofrece transferirla.
+
 ## 9. Onboarding del cliente (primeros 7 días)
 
 Datos del negocio y logo, fotos de trabajos y del equipo, conectar tarjeta a
